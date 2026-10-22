@@ -1,6 +1,8 @@
 
 import re
 import pandas as pd
+from pathlib import Path
+
 
 
 # 1. Keywords used to identify report categories
@@ -119,30 +121,36 @@ def process_report(description):
     }
 
 
-
 def process_csv(input_file, output_file):
     df = pd.read_csv(input_file)
 
-    results = df["description"].fillna("").apply(
-        process_report
-    )
+    if "description" not in df.columns:
+        raise ValueError("CSV must contain a 'description' column.")
 
-    df["category"] = results.apply(
+    results = df["description"].fillna("").apply(process_report)
+
+    # Preserve the original category and urgency for comparison
+    df["predicted_category"] = results.apply(
         lambda result: result["category"]
     )
-
-    df["urgency"] = results.apply(
+    df["predicted_urgency"] = results.apply(
         lambda result: result["urgency"]
     )
-
     df["review_required"] = results.apply(
         lambda result: result["review_required"]
     )
 
-    df.to_csv(output_file, index=False)
+    output_path = Path(output_file)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    df.to_csv(output_path, index=False)
 
     print(f"Processed {len(df)} reports.")
-    print(f"Saved results to {output_file}")
+    print(f"Saved results to {output_path}")
+    print("\nPredicted categories:")
+    print(df["predicted_category"].value_counts())
+    print("\nUrgency distribution:")
+    print(df["predicted_urgency"].value_counts().sort_index())
 
 
 if __name__ == "__main__":
