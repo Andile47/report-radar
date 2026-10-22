@@ -23,6 +23,19 @@ OUTPUT_FILE = OUT_DIR / "output.csv"
 
 HORIZON = 4  # how many weeks ahead to forecast
 
+REQUIRED_COLUMNS = {"timestamp", "category"}
+
+
+def load_reports(path: Path = REPORTS_FILE) -> pd.DataFrame:
+    """Read the reports file and parse timestamps. Rows without a valid
+    timestamp are dropped because they cannot be placed in a week."""
+    df = pd.read_csv(path)
+    missing = REQUIRED_COLUMNS - set(df.columns)
+    if missing:
+        raise ValueError(f"{path} is missing columns: {sorted(missing)}")
+    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+    return df.dropna(subset=["timestamp"])
+
 
 def main() -> None:
     raise NotImplementedError("Forecast pipeline not built yet.")
