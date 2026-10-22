@@ -65,6 +65,23 @@ def drop_partial_weeks(counts: pd.Series, timestamps: pd.Series) -> pd.Series:
     return counts[full]
 
 
+# ---------- models ----------
+# Each model takes the weekly history (oldest first) and returns `horizon`
+# predicted weekly counts.
+
+MA_WINDOW = 4  # weeks averaged by the moving-average model
+
+
+def naive(history: np.ndarray, horizon: int) -> np.ndarray:
+    """Next weeks look like the most recent week."""
+    return np.repeat(float(history[-1]), horizon)
+
+
+def moving_average(history: np.ndarray, horizon: int, window: int = MA_WINDOW) -> np.ndarray:
+    """Next weeks look like the average of the last `window` weeks."""
+    return np.repeat(float(np.mean(history[-window:])), horizon)
+
+
 def main() -> None:
     raise NotImplementedError("Forecast pipeline not built yet.")
 
