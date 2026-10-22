@@ -52,6 +52,19 @@ def weekly_counts(df: pd.DataFrame, category: str | None = None) -> pd.Series:
     return counts
 
 
+def drop_partial_weeks(counts: pd.Series, timestamps: pd.Series) -> pd.Series:
+    """Keep only weeks fully covered by the data.
+
+    The first and last weeks usually contain only a few days of reports
+    (e.g. data starting on a Wednesday), which would look like a sudden
+    drop in volume and mislead the forecast."""
+    first_day = timestamps.min().normalize()
+    last_day = timestamps.max().normalize()  # last day may itself be incomplete
+    week_end = counts.index + pd.Timedelta(days=7)
+    full = (counts.index >= first_day) & (week_end <= last_day)
+    return counts[full]
+
+
 def main() -> None:
     raise NotImplementedError("Forecast pipeline not built yet.")
 
