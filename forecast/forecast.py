@@ -8,6 +8,7 @@ predicts the next few weeks of report volume.
 
 Writes (all in this folder):
   output.csv               week_start, actual, forecast  (read by the dashboard)
+  output_by_category.csv   category, week_start, actual, forecast, model
 """
 from __future__ import annotations
 
@@ -21,6 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 REPORTS_FILE = ROOT / "data" / "reports.csv"
 OUT_DIR = Path(__file__).resolve().parent
 OUTPUT_FILE = OUT_DIR / "output.csv"
+CATEGORY_FILE = OUT_DIR / "output_by_category.csv"
 
 HORIZON = 4  # how many weeks ahead to forecast
 
@@ -164,6 +166,24 @@ def build_output(history: pd.Series, future: pd.Series) -> pd.DataFrame:
     return out
 
 
+def forecast_by_category(reports: pd.DataFrame, weeks: pd.Index) -> tuple[pd.DataFrame, dict]:
+    """Run the same model selection and forecast for each category, so a
+    surge in one service (e.g. water) is visible even if the total is flat.
+
+    Returns a long table (category, week_start, actual, forecast, model)
+    and a summary of the chosen model and MAE per category."""
+    frames, summary = [], {}
+    for category in sorted(reports["category"].dropna().unique()):
+        weekly = weekly_counts(reports, category).reindex(weeks, fill_value=0)
+        best, scores = select_best_model(weekly)
+        out = build_output(weekly, forecast_next(weekly, best))
+        out.insert(0, "category", category)
+        out["model"] = best
+        frames.append(out)
+        summary[category] = {"model": best, "mae": round(scores[best], 2)}
+    return pd.concat(frames, ignore_index=True), summary
+
+
 def main() -> None:
     reports = load_reports()
     weekly = drop_partial_weeks(weekly_counts(reports), reports["timestamp"])
@@ -171,13 +191,18 @@ def main() -> None:
     future = forecast_next(weekly, best)
 
     build_output(weekly, future).to_csv(OUTPUT_FILE, index=False)
+    by_category, category_summary = forecast_by_category(reports, weekly.index)
+    by_category.to_csv(CATEGORY_FILE, index=False)
 
     print(f"Weeks of history: {len(weekly)} "
           f"({weekly.index[0]:%Y-%m-%d} to {weekly.index[-1]:%Y-%m-%d})")
     for name, mae in sorted(scores.items(), key=lambda kv: kv[1]):
         print(f"  {name:<15} MAE {mae:5.1f} reports/week")
     print(f"Selected model: {best}")
-    print(f"Wrote {OUTPUT_FILE.relative_to(ROOT)}")
+    for category, info in category_summary.items():
+        print(f"  {category:<13} {info['model']:<15} MAE {info['mae']:5.1f}")
+    for path in (OUTPUT_FILE, CATEGORY_FILE):
+        print(f"Wrote {path.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
