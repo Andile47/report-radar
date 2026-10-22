@@ -15,6 +15,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import LinearRegression
 
 ROOT = Path(__file__).resolve().parent.parent
 REPORTS_FILE = ROOT / "data" / "reports.csv"
@@ -70,6 +71,7 @@ def drop_partial_weeks(counts: pd.Series, timestamps: pd.Series) -> pd.Series:
 # predicted weekly counts.
 
 MA_WINDOW = 4  # weeks averaged by the moving-average model
+TREND_WINDOW = 12  # weeks used to fit the trend line
 
 
 def naive(history: np.ndarray, horizon: int) -> np.ndarray:
@@ -80,6 +82,23 @@ def naive(history: np.ndarray, horizon: int) -> np.ndarray:
 def moving_average(history: np.ndarray, horizon: int, window: int = MA_WINDOW) -> np.ndarray:
     """Next weeks look like the average of the last `window` weeks."""
     return np.repeat(float(np.mean(history[-window:])), horizon)
+
+
+def linear_trend(history: np.ndarray, horizon: int, window: int = TREND_WINDOW) -> np.ndarray:
+    """Fit a straight line to the last `window` weeks and extend it.
+    Predictions are kept at zero or above, since counts can't be negative."""
+    y = np.asarray(history[-window:], dtype=float)
+    x = np.arange(len(y)).reshape(-1, 1)
+    model = LinearRegression().fit(x, y)
+    future = np.arange(len(y), len(y) + horizon).reshape(-1, 1)
+    return np.clip(model.predict(future), 0, None)
+
+
+MODELS = {
+    "naive": naive,
+    "moving_average": moving_average,
+    "linear_trend": linear_trend,
+}
 
 
 def main() -> None:
