@@ -10,6 +10,7 @@ Writes (all in this folder):
   output.csv               week_start, actual, forecast  (read by the dashboard)
   output_by_category.csv   category, week_start, actual, forecast, model
   metrics.json             backtest accuracy of each model
+  insights.md              2-3 sentences on the forecast, for the dashboard
 """
 from __future__ import annotations
 
@@ -26,6 +27,7 @@ OUT_DIR = Path(__file__).resolve().parent
 OUTPUT_FILE = OUT_DIR / "output.csv"
 CATEGORY_FILE = OUT_DIR / "output_by_category.csv"
 METRICS_FILE = OUT_DIR / "metrics.json"
+INSIGHTS_FILE = OUT_DIR / "insights.md"
 
 HORIZON = 4  # how many weeks ahead to forecast
 
@@ -206,6 +208,59 @@ def build_metrics(weekly: pd.Series, best: str, scores: dict[str, float],
     }
 
 
+SURGE_THRESHOLD = 0.15  # forecast this far above the recent average = surge
+
+
+def change_vs_recent(history: pd.Series, future: pd.Series) -> float:
+    """Fractional change of the forecast average vs the last HORIZON weeks."""
+    recent = float(history.iloc[-HORIZON:].mean())
+    return (float(future.mean()) - recent) / recent if recent else 0.0
+
+
+def write_insights(weekly: pd.Series, future: pd.Series, metrics: dict,
+                   by_category: pd.DataFrame) -> str:
+    """Turn the forecast into 2-3 plain sentences for the dashboard, and
+    flag a surge if any forecast is SURGE_THRESHOLD above recent weeks."""
+    change = change_vs_recent(weekly, future)
+    recent = weekly.iloc[-HORIZON:].mean()
+    direction = "up" if change > 0.02 else "down" if change < -0.02 else "about level"
+    lines = [
+        f"Report Radar expects about {future.mean():.0f} reports a week over the next "
+        f"{HORIZON} weeks (from {future.index[0]:%d %b %Y}), {direction} "
+        f"({change:+.0%}) on the last {HORIZON} weeks' average of {recent:.0f}."
+    ]
+
+    surges = []
+    for category, rows in by_category.groupby("category"):
+        hist = rows.dropna(subset=["actual"]).set_index("week_start")["actual"]
+        ahead = rows[rows["actual"].isna()].set_index("week_start")["forecast"]
+        cat_change = change_vs_recent(hist, ahead)
+        if cat_change >= SURGE_THRESHOLD:
+            surges.append(f"{category} ({cat_change:+.0%})")
+    if change >= SURGE_THRESHOLD:
+        lines.append("**Surge alert:** total volume is forecast to rise sharply; "
+                     "plan extra capacity across teams.")
+    elif surges:
+        lines.append("**Surge alert** for " + ", ".join(surges)
+                     + "; move capacity to these teams.")
+    else:
+        lines.append(f"No surge is expected: no category is forecast to rise more "
+                     f"than {SURGE_THRESHOLD:.0%}, so current staffing should cope.")
+
+    average = metrics["average_reports_per_week"]
+    peak_week = weekly.idxmax()
+    lines.append(
+        f"For context, the average over the full history is {average:.0f} a week and the "
+        f"busiest week was {peak_week:%d %b %Y} ({weekly.max():.0f} reports); "
+        f"the forecast is typically off by about "
+        f"{metrics['mae_by_model'][metrics['selected_model']]:.0f} reports a week "
+        f"({metrics['selected_mae_pct_of_average_week']:.0f}% of an average week)."
+    )
+    text = " ".join(lines)
+    INSIGHTS_FILE.write_text("# Forecast insights\n\n" + text + "\n")
+    return text
+
+
 def main() -> None:
     reports = load_reports()
     weekly = drop_partial_weeks(weekly_counts(reports), reports["timestamp"])
@@ -217,6 +272,7 @@ def main() -> None:
     by_category.to_csv(CATEGORY_FILE, index=False)
     metrics = build_metrics(weekly, best, scores, category_summary)
     METRICS_FILE.write_text(json.dumps(metrics, indent=2) + "\n")
+    insights = write_insights(weekly, future, metrics, by_category)
 
     print(f"Weeks of history: {len(weekly)} "
           f"({weekly.index[0]:%Y-%m-%d} to {weekly.index[-1]:%Y-%m-%d})")
@@ -225,8 +281,9 @@ def main() -> None:
     print(f"Selected model: {best}")
     for category, info in category_summary.items():
         print(f"  {category:<13} {info['model']:<15} MAE {info['mae']:5.1f}")
-    for path in (OUTPUT_FILE, CATEGORY_FILE, METRICS_FILE):
+    for path in (OUTPUT_FILE, CATEGORY_FILE, METRICS_FILE, INSIGHTS_FILE):
         print(f"Wrote {path.relative_to(ROOT)}")
+    print("\n" + insights)
 
 
 if __name__ == "__main__":
