@@ -133,6 +133,16 @@ def select_best_model(series: pd.Series) -> tuple[str, dict[str, float]]:
     return best, scores
 
 
+def forecast_next(series: pd.Series, model_name: str, horizon: int = HORIZON) -> pd.Series:
+    """Forecast the `horizon` weeks after the last week in `series`,
+    using all of the history."""
+    predicted = MODELS[model_name](series.to_numpy(dtype=float), horizon)
+    weeks = pd.date_range(
+        series.index[-1] + pd.Timedelta(weeks=1), periods=horizon, freq="W-MON"
+    )
+    return pd.Series(predicted.round(1), index=weeks, name="forecast")
+
+
 def main() -> None:
     raise NotImplementedError("Forecast pipeline not built yet.")
 
