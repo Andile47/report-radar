@@ -125,6 +125,14 @@ def backtest(series: pd.Series, model, horizon: int = HORIZON,
     return float(np.mean(errors))
 
 
+def select_best_model(series: pd.Series) -> tuple[str, dict[str, float]]:
+    """Backtest every model and return the name of the most accurate one
+    (lowest MAE) together with all the scores."""
+    scores = {name: backtest(series, model) for name, model in MODELS.items()}
+    best = min(scores, key=scores.get)
+    return best, scores
+
+
 def main() -> None:
     raise NotImplementedError("Forecast pipeline not built yet.")
 
