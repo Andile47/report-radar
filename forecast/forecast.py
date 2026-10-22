@@ -143,8 +143,41 @@ def forecast_next(series: pd.Series, model_name: str, horizon: int = HORIZON) ->
     return pd.Series(predicted.round(1), index=weeks, name="forecast")
 
 
+def build_output(history: pd.Series, future: pd.Series) -> pd.DataFrame:
+    """Combine history and forecast in the dashboard's format:
+    week_start, actual, forecast.
+
+    History rows have `actual` filled; future rows have `forecast` filled.
+    The last history week carries both values so the two lines join up
+    on the dashboard chart instead of leaving a gap."""
+    past = pd.DataFrame(
+        {"week_start": history.index, "actual": history.to_numpy(dtype=float),
+         "forecast": np.nan}
+    )
+    past.loc[past.index[-1], "forecast"] = past["actual"].iloc[-1]
+    ahead = pd.DataFrame(
+        {"week_start": future.index, "actual": np.nan,
+         "forecast": future.to_numpy()}
+    )
+    out = pd.concat([past, ahead], ignore_index=True)
+    out["week_start"] = out["week_start"].dt.strftime("%Y-%m-%d")
+    return out
+
+
 def main() -> None:
-    raise NotImplementedError("Forecast pipeline not built yet.")
+    reports = load_reports()
+    weekly = drop_partial_weeks(weekly_counts(reports), reports["timestamp"])
+    best, scores = select_best_model(weekly)
+    future = forecast_next(weekly, best)
+
+    build_output(weekly, future).to_csv(OUTPUT_FILE, index=False)
+
+    print(f"Weeks of history: {len(weekly)} "
+          f"({weekly.index[0]:%Y-%m-%d} to {weekly.index[-1]:%Y-%m-%d})")
+    for name, mae in sorted(scores.items(), key=lambda kv: kv[1]):
+        print(f"  {name:<15} MAE {mae:5.1f} reports/week")
+    print(f"Selected model: {best}")
+    print(f"Wrote {OUTPUT_FILE.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
