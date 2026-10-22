@@ -50,6 +50,11 @@ def test_linear_trend_extends_a_straight_line():
     assert fc.linear_trend(history, 2) == pytest.approx([24.0, 26.0])
 
 
+def test_moving_average_trend_follows_a_straight_line():
+    history = np.arange(12, dtype=float) * 2  # 0, 2, ..., 22
+    assert fc.moving_average_trend(history, 2) == pytest.approx([24.0, 26.0])
+
+
 def test_backtest_is_zero_for_a_perfect_model():
     weeks = pd.date_range("2026-01-05", periods=30, freq="W-MON")
     flat = pd.Series(50.0, index=weeks)
@@ -66,7 +71,7 @@ def test_select_best_model_prefers_trend_on_trending_data():
     weeks = pd.date_range("2026-01-05", periods=30, freq="W-MON")
     rising = pd.Series(np.arange(30, dtype=float) * 3 + 10, index=weeks)
     best, scores = fc.select_best_model(rising)
-    assert best == "linear_trend"
+    assert best in {"linear_trend", "moving_average_trend"}
     assert set(scores) == set(fc.MODELS)
 
 
@@ -91,3 +96,29 @@ def test_forecast_by_category_covers_every_category():
     assert set(table["category"]) == {"water", "roads"}
     assert set(summary) == {"water", "roads"}
     assert {"category", "week_start", "actual", "forecast", "model"} <= set(table.columns)
+
+
+def test_projected_workload_has_weeks_range_and_total():
+    weeks = pd.date_range("2026-11-02", periods=4, freq="W-MON")
+    future = pd.Series([50.0, 52.0, 54.0, 56.0], index=weeks)
+    table = fc.projected_workload(future, mae=5)
+    assert len(table) == 5
+    assert table["expected_reports"].iloc[-1] == 212
+    assert table["week_start"].iloc[-1].startswith("Total")
+    assert (table["likely_low"] <= table["expected_reports"]).all()
+    assert (table["likely_high"] >= table["expected_reports"]).all()
+
+
+def test_projected_workload_range_never_goes_negative():
+    weeks = pd.date_range("2026-11-02", periods=4, freq="W-MON")
+    table = fc.projected_workload(pd.Series(2.0, index=weeks), mae=5)
+    assert (table["likely_low"] >= 0).all()
+
+
+def test_plot_forecast_saves_a_chart(tmp_path):
+    weeks = pd.date_range("2026-01-05", periods=20, freq="W-MON")
+    history = pd.Series(np.arange(20, dtype=float) + 30, index=weeks)
+    future = fc.forecast_next(history, "moving_average")
+    path = tmp_path / "chart.png"
+    fc.plot_forecast(history, future, 3.0, "moving_average", path)
+    assert path.exists() and path.stat().st_size > 0

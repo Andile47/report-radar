@@ -9,7 +9,8 @@
   "mae_by_model": {
     "naive": 4.97,
     "moving_average": 3.96,
-    "linear_trend": 7.21
+    "linear_trend": 7.21,
+    "moving_average_trend": 6.42
   },
   "selected_mae_pct_of_average_week": 5.2,
   "by_category": {
@@ -34,8 +35,8 @@
       "mae": 2.75
     },
     "water": {
-      "model": "linear_trend",
-      "mae": 3.57
+      "model": "moving_average_trend",
+      "mae": 3.53
     }
   }
 }
