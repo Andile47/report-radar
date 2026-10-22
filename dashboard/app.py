@@ -67,11 +67,11 @@ def placeholder_clusters() -> pd.DataFrame:
 
 
 @st.cache_data
-def load(path: Path, fallback, date_cols=()):
+def load(path: Path, _fallback, date_cols=()):
     """Return (dataframe, is_placeholder)."""
     if path.exists():
         return pd.read_csv(path, parse_dates=list(date_cols)), False
-    return fallback(), True
+    return _fallback(), True
 
 
 reports, rep_ph = load(REPORTS_FILE, placeholder_reports, ["timestamp"])
