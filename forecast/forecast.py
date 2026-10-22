@@ -37,6 +37,21 @@ def load_reports(path: Path = REPORTS_FILE) -> pd.DataFrame:
     return df.dropna(subset=["timestamp"])
 
 
+def weekly_counts(df: pd.DataFrame, category: str | None = None) -> pd.Series:
+    """Count reports per week. Weeks start on Monday, and week_start is
+    the Monday of each week. Pass a category to count only that category."""
+    if category is not None:
+        df = df[df["category"] == category]
+    counts = (
+        df.set_index("timestamp")
+        .resample("W-MON", label="left", closed="left")
+        .size()
+    )
+    counts.index.name = "week_start"
+    counts.name = "reports"
+    return counts
+
+
 def main() -> None:
     raise NotImplementedError("Forecast pipeline not built yet.")
 
