@@ -101,6 +101,30 @@ MODELS = {
 }
 
 
+# ---------- evaluation ----------
+BACKTEST_WEEKS = 12  # recent weeks used to test each model
+
+
+def backtest(series: pd.Series, model, horizon: int = HORIZON,
+             test_weeks: int = BACKTEST_WEEKS) -> float:
+    """Mean absolute error (MAE) of a model on the most recent weeks.
+
+    Rolling-origin test: pretend we are standing at each week in the test
+    period, forecast the next `horizon` weeks using only the data before
+    it, and compare with what actually happened. Returns the average
+    miss in reports per week."""
+    values = series.to_numpy(dtype=float)
+    first_origin = len(values) - test_weeks
+    if first_origin < TREND_WINDOW:
+        raise ValueError("Not enough weeks of history to backtest.")
+    errors = []
+    for origin in range(first_origin, len(values) - horizon + 1):
+        predicted = model(values[:origin], horizon)
+        actual = values[origin:origin + horizon]
+        errors.extend(np.abs(predicted - actual))
+    return float(np.mean(errors))
+
+
 def main() -> None:
     raise NotImplementedError("Forecast pipeline not built yet.")
 
