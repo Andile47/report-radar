@@ -9,9 +9,11 @@ predicts the next few weeks of report volume.
 Writes (all in this folder):
   output.csv               week_start, actual, forecast  (read by the dashboard)
   output_by_category.csv   category, week_start, actual, forecast, model
+  metrics.json             backtest accuracy of each model
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import numpy as np
@@ -23,6 +25,7 @@ REPORTS_FILE = ROOT / "data" / "reports.csv"
 OUT_DIR = Path(__file__).resolve().parent
 OUTPUT_FILE = OUT_DIR / "output.csv"
 CATEGORY_FILE = OUT_DIR / "output_by_category.csv"
+METRICS_FILE = OUT_DIR / "metrics.json"
 
 HORIZON = 4  # how many weeks ahead to forecast
 
@@ -184,6 +187,25 @@ def forecast_by_category(reports: pd.DataFrame, weeks: pd.Index) -> tuple[pd.Dat
     return pd.concat(frames, ignore_index=True), summary
 
 
+def build_metrics(weekly: pd.Series, best: str, scores: dict[str, float],
+                  category_summary: dict) -> dict:
+    """Accuracy summary saved alongside the forecast so the team can quote
+    how reliable it is. MAE is also shown as a % of an average week."""
+    mean_week = float(weekly.mean())
+    return {
+        "history_start": f"{weekly.index[0]:%Y-%m-%d}",
+        "history_end": f"{weekly.index[-1]:%Y-%m-%d}",
+        "weeks_of_history": int(len(weekly)),
+        "horizon_weeks": HORIZON,
+        "backtest_weeks": BACKTEST_WEEKS,
+        "average_reports_per_week": round(mean_week, 1),
+        "selected_model": best,
+        "mae_by_model": {name: round(mae, 2) for name, mae in scores.items()},
+        "selected_mae_pct_of_average_week": round(100 * scores[best] / mean_week, 1),
+        "by_category": category_summary,
+    }
+
+
 def main() -> None:
     reports = load_reports()
     weekly = drop_partial_weeks(weekly_counts(reports), reports["timestamp"])
@@ -193,6 +215,8 @@ def main() -> None:
     build_output(weekly, future).to_csv(OUTPUT_FILE, index=False)
     by_category, category_summary = forecast_by_category(reports, weekly.index)
     by_category.to_csv(CATEGORY_FILE, index=False)
+    metrics = build_metrics(weekly, best, scores, category_summary)
+    METRICS_FILE.write_text(json.dumps(metrics, indent=2) + "\n")
 
     print(f"Weeks of history: {len(weekly)} "
           f"({weekly.index[0]:%Y-%m-%d} to {weekly.index[-1]:%Y-%m-%d})")
@@ -201,7 +225,7 @@ def main() -> None:
     print(f"Selected model: {best}")
     for category, info in category_summary.items():
         print(f"  {category:<13} {info['model']:<15} MAE {info['mae']:5.1f}")
-    for path in (OUTPUT_FILE, CATEGORY_FILE):
+    for path in (OUTPUT_FILE, CATEGORY_FILE, METRICS_FILE):
         print(f"Wrote {path.relative_to(ROOT)}")
 
 
