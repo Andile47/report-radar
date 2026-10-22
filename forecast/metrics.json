@@ -1,0 +1,41 @@
+{
+  "history_start": "2025-10-27",
+  "history_end": "2026-10-12",
+  "weeks_of_history": 51,
+  "horizon_weeks": 4,
+  "backtest_weeks": 12,
+  "average_reports_per_week": 76.8,
+  "selected_model": "moving_average",
+  "mae_by_model": {
+    "naive": 4.97,
+    "moving_average": 3.96,
+    "linear_trend": 7.21
+  },
+  "selected_mae_pct_of_average_week": 5.2,
+  "by_category": {
+    "electricity": {
+      "model": "moving_average",
+      "mae": 3.11
+    },
+    "refuse": {
+      "model": "moving_average",
+      "mae": 1.56
+    },
+    "roads": {
+      "model": "moving_average",
+      "mae": 1.74
+    },
+    "sanitation": {
+      "model": "moving_average",
+      "mae": 2.22
+    },
+    "streetlights": {
+      "model": "moving_average",
+      "mae": 2.75
+    },
+    "water": {
+      "model": "linear_trend",
+      "mae": 3.57
+    }
+  }
+}
