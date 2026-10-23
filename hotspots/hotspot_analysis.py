@@ -236,6 +236,31 @@ def write_empty_outputs(message: str) -> None:
 
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
+    if FOLIUM_IMPORT_ERROR is not None:
+        print("Error: Folium is required to create the hotspot map.")
+        print("Install dependencies with: python -m pip install -r requirements.txt")
+        return 1
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    reports = load_reports()
+    if reports is None:
+        return 1
+
+    print(f"Dataset: {DATA_FILE}")
+    print("Note: project reports are synthetic; hotspot results are simulated.")
+    print(f"Total reports loaded: {len(reports):,}")
+    coordinate_reports = valid_coordinate_reports(reports)
+    if coordinate_reports is None:
+        return 1
+    if coordinate_reports.empty:
+        print("No usable coordinates; saving empty analysis files and a Johannesburg map.")
+        write_empty_outputs("No reports with usable coordinates were found.")
+        return 0
+
+    clustered_reports, model, _ = assign_clusters(coordinate_reports)
+    clusters = rank_clusters(summarize_clusters(clustered_reports, model))
+    clusters.to_csv(CLUSTERS_FILE, index=False)
+    print(f"Saved: {CLUSTERS_FILE}")
     return 0
 
 
