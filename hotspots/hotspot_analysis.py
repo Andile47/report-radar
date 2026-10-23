@@ -43,6 +43,15 @@ CLUSTER_COLUMNS = [
 ]
 
 
+def most_common_value(values: pd.Series) -> str:
+    """Return the most common non-empty value, or a readable fallback."""
+    clean_values = values.dropna().astype(str).str.strip()
+    clean_values = clean_values[clean_values != ""]
+    if clean_values.empty:
+        return "Unknown"
+    return str(clean_values.mode().iloc[0])
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     return 0
