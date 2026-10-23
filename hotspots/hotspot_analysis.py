@@ -223,6 +223,17 @@ def build_map(reports: pd.DataFrame, clusters: pd.DataFrame) -> None:
     map_view.save(MAP_FILE)
 
 
+def write_empty_outputs(message: str) -> None:
+    """Write empty result tables and an explanatory map when no points exist."""
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(columns=CLUSTER_COLUMNS).to_csv(CLUSTERS_FILE, index=False)
+    pd.DataFrame().to_csv(REPORTS_FILE, index=False)
+    map_view = folium.Map(location=JOHANNESBURG, zoom_start=11, control_scale=True)
+    add_map_heading(map_view)
+    folium.Marker(JOHANNESBURG, popup=message).add_to(map_view)
+    map_view.save(MAP_FILE)
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     return 0
