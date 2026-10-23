@@ -66,6 +66,32 @@ def load_reports() -> pd.DataFrame | None:
     return None
 
 
+def valid_coordinate_reports(reports: pd.DataFrame) -> pd.DataFrame | None:
+    """Return reports with usable geographic coordinates."""
+    missing_columns = [
+        column for column in ("latitude", "longitude") if column not in reports.columns
+    ]
+    if missing_columns:
+        print("Error: required coordinate column(s) missing: " + ", ".join(missing_columns))
+        return None
+
+    coordinate_reports = reports.copy()
+    coordinate_reports["latitude"] = pd.to_numeric(
+        coordinate_reports["latitude"], errors="coerce"
+    )
+    coordinate_reports["longitude"] = pd.to_numeric(
+        coordinate_reports["longitude"], errors="coerce"
+    )
+    valid_coordinates = (
+        coordinate_reports["latitude"].between(-90, 90)
+        & coordinate_reports["longitude"].between(-180, 180)
+    )
+    valid_reports = coordinate_reports.loc[valid_coordinates].copy()
+    print(f"Valid coordinate reports: {len(valid_reports):,}")
+    print(f"Excluded reports (missing or invalid coordinates): {len(reports) - len(valid_reports):,}")
+    return valid_reports
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     return 0
