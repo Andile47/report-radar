@@ -141,6 +141,19 @@ def summarize_clusters(
     return pd.DataFrame(cluster_rows)
 
 
+def rank_clusters(clusters: pd.DataFrame) -> pd.DataFrame:
+    """Sort busiest first and add ranks plus dashboard-compatible columns."""
+    ranked = clusters.sort_values(
+        ["report_count", "cluster_id"], ascending=[False, True]
+    ).reset_index(drop=True)
+    ranked.insert(0, "rank", range(1, len(ranked) + 1))
+    ranked["cluster"] = ranked["cluster_id"]
+    ranked["area_name"] = ranked["dominant_ward_or_suburb"]
+    ranked["latitude"] = ranked["center_latitude"]
+    ranked["longitude"] = ranked["center_longitude"]
+    return ranked[CLUSTER_COLUMNS]
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     return 0
