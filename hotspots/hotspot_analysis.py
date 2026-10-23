@@ -105,6 +105,42 @@ def assign_clusters(reports: pd.DataFrame) -> tuple[pd.DataFrame, KMeans, int]:
     return clustered_reports, model, cluster_count
 
 
+def summarize_clusters(
+    reports: pd.DataFrame, model: KMeans
+) -> pd.DataFrame:
+    """Calculate report counts, centres, dominant labels, and urgency."""
+    cluster_rows = []
+    for cluster_id, group in reports.groupby("cluster_id"):
+        centre = model.cluster_centers_[int(cluster_id)]
+        area = (
+            most_common_value(group["ward_or_suburb"])
+            if "ward_or_suburb" in group
+            else "Unknown"
+        )
+        category = (
+            most_common_value(group["category"])
+            if "category" in group
+            else "Unknown"
+        )
+        urgency = (
+            pd.to_numeric(group["urgency"], errors="coerce").mean()
+            if "urgency" in group
+            else float("nan")
+        )
+        cluster_rows.append(
+            {
+                "cluster_id": int(cluster_id),
+                "report_count": len(group),
+                "center_latitude": float(centre[0]),
+                "center_longitude": float(centre[1]),
+                "dominant_ward_or_suburb": area,
+                "dominant_category": category,
+                "average_urgency": urgency,
+            }
+        )
+    return pd.DataFrame(cluster_rows)
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     return 0
