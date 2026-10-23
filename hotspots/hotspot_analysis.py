@@ -8,6 +8,7 @@ import sys
 
 import pandas as pd
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 try:
     import folium
@@ -26,7 +27,11 @@ OUTPUT_DIR = Path(__file__).resolve().parent
 CLUSTERS_FILE = OUTPUT_DIR / "clusters.csv"
 REPORTS_FILE = OUTPUT_DIR / "clustered_reports.csv"
 MAP_FILE = OUTPUT_DIR / "hotspot_map.html"
+K_CHECK_FILE = OUTPUT_DIR / "cluster_count_check.csv"
+K_CHART_FILE = OUTPUT_DIR / "cluster_count_check.png"
+INSIGHTS_FILE = OUTPUT_DIR / "insights.md"
 JOHANNESBURG = [-26.2041, 28.0473]
+MAP_ZOOM = 14  # close enough to see the Alexandra wards
 
 CLUSTER_COLUMNS = [
     "rank",
@@ -170,8 +175,9 @@ def add_map_heading(map_view: folium.Map) -> None:
 
 
 def build_map(reports: pd.DataFrame, clusters: pd.DataFrame) -> None:
-    """Create the Johannesburg map and show report density as a heat layer."""
-    map_view = folium.Map(location=JOHANNESBURG, zoom_start=11, control_scale=True)
+    """Create the map, centred on the reports, and show density as a heat layer."""
+    centre = [reports["latitude"].mean(), reports["longitude"].mean()] if not reports.empty else JOHANNESBURG
+    map_view = folium.Map(location=centre, zoom_start=MAP_ZOOM, control_scale=True)
     add_map_heading(map_view)
     if not reports.empty:
         HeatMap(
@@ -223,6 +229,102 @@ def build_map(reports: pd.DataFrame, clusters: pd.DataFrame) -> None:
     map_view.save(MAP_FILE)
 
 
+def choose_cluster_count(reports: pd.DataFrame, k_values=range(2, 11)) -> pd.DataFrame:
+    """Help choose the number of clusters. For each k, record:
+    * inertia (elbow method): how spread out the points are inside their
+      clusters. It always falls as k grows; look for the "elbow" where
+      adding more clusters stops helping much.
+    * silhouette score: how well each point fits its own cluster compared
+      with the next-nearest one (-1 to 1, higher is better).
+    A sample of 2,000 points keeps the silhouette quick to calculate."""
+    coordinates = reports[["latitude", "longitude"]].to_numpy()
+    rows = []
+    for k in k_values:
+        if k >= len(coordinates):
+            break
+        model = KMeans(n_clusters=k, random_state=42, n_init=10).fit(coordinates)
+        silhouette = silhouette_score(
+            coordinates, model.labels_, sample_size=min(2000, len(coordinates)), random_state=42
+        )
+        rows.append({"k": k, "inertia": model.inertia_, "silhouette": round(float(silhouette), 3)})
+    return pd.DataFrame(rows)
+
+
+def plot_cluster_count(check: pd.DataFrame, chosen: int) -> None:
+    """Save the elbow and silhouette charts side by side."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, (left, right) = plt.subplots(1, 2, figsize=(10, 3.8))
+    left.plot(check["k"], check["inertia"], marker="o", color="#2b6cb0")
+    left.set_title("Elbow method (lower = tighter clusters)")
+    left.set_xlabel("Number of clusters (k)")
+    left.set_ylabel("Inertia")
+    right.plot(check["k"], check["silhouette"], marker="o", color="#2f855a")
+    right.set_title("Silhouette score (higher = better separated)")
+    right.set_xlabel("Number of clusters (k)")
+    for ax in (left, right):
+        ax.axvline(chosen, color="#e53e3e", linestyle="--", linewidth=1, label=f"chosen k = {chosen}")
+        ax.grid(alpha=0.3)
+        ax.legend()
+    fig.tight_layout()
+    fig.savefig(K_CHART_FILE, dpi=130)
+    plt.close(fig)
+
+
+def write_insights(reports: pd.DataFrame, clusters: pd.DataFrame, check: pd.DataFrame) -> str:
+    """Two or three plain sentences on what the map tells the municipality."""
+    total = int(clusters["report_count"].sum())
+    top = clusters.iloc[:2]
+    top_share = top["report_count"].sum() / total
+    quietest = clusters.iloc[-1]
+    urgent = clusters.sort_values("average_urgency", ascending=False).iloc[0]
+    named = set(clusters["dominant_ward_or_suburb"])
+    unnamed = sorted(set(reports["ward_or_suburb"].dropna()) - named) if "ward_or_suburb" in reports else []
+    best_k = int(check.loc[check["silhouette"].idxmax(), "k"]) if not check.empty else len(clusters)
+
+    urgency_range = clusters["average_urgency"].max() - clusters["average_urgency"].min()
+    same_problem = (clusters["dominant_category"] == clusters.iloc[0]["dominant_category"]).all()
+    sentences = [
+        f"Reports are concentrated in two hotspots: {top.iloc[0]['area_name']} "
+        f"({int(top.iloc[0]['report_count']):,} reports) and {top.iloc[1]['area_name']} "
+        f"({int(top.iloc[1]['report_count']):,}) together account for {top_share:.0%} of all "
+        f"{total:,} reports, so placing field teams and depots near them will cut response "
+        f"times the most, while {quietest['area_name']} is the quietest "
+        f"({int(quietest['report_count']):,} reports)."
+    ]
+    problem = (f"{str(clusters.iloc[0]['dominant_category']).capitalize()} is the most common "
+               f"problem in every hotspot" if same_problem
+               else "The most common problem differs between hotspots")
+    if urgency_range < 0.3:
+        sentences.append(f"{problem}, and average urgency is similar everywhere "
+                         f"({clusters['average_urgency'].min():.1f} to "
+                         f"{clusters['average_urgency'].max():.1f} out of 5), so the busiest "
+                         f"areas need more capacity rather than different priorities.")
+    else:
+        sentences.append(f"{problem}; {urgent['area_name']} has the most urgent reports on "
+                         f"average ({urgent['average_urgency']:.1f} out of 5).")
+    sentences.append(
+        "Fewer reports does not have to mean fewer problems: quieter areas may simply report "
+        "less, which the Week 6 fairness check should look at"
+        + (f" ({', '.join(unnamed)} has no hotspot of its own because its reports fall inside "
+           f"neighbouring clusters)." if unnamed else "."))
+    text = " ".join(sentences)
+
+    table = ["| Rank | Area | Reports | Main problem | Average urgency |",
+             "| --- | --- | --- | --- | --- |"]
+    for row in clusters.itertuples():
+        table.append(f"| {row.rank} | {row.area_name} | {row.report_count:,} | "
+                     f"{row.dominant_category} | {row.average_urgency:.1f} |")
+    INSIGHTS_FILE.write_text(
+        "# Hotspot insights\n\n" + text + "\n\n## Ranked hotspots (busiest first)\n\n"
+        + "\n".join(table) + f"\n\nNumber of clusters: {len(clusters)}. The silhouette score "
+        f"was highest at k = {best_k} (see cluster_count_check.png).\n"
+    )
+    return text
+
+
 def write_empty_outputs(message: str) -> None:
     """Write empty result tables and an explanatory map when no points exist."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -262,6 +364,11 @@ def analyze() -> int:
     clustered_reports.to_csv(REPORTS_FILE, index=False)
     clusters.to_csv(CLUSTERS_FILE, index=False)
     build_map(clustered_reports, clusters)
+    check = choose_cluster_count(coordinate_reports)
+    check.to_csv(K_CHECK_FILE, index=False)
+    if not check.empty:
+        plot_cluster_count(check, len(clusters))
+    insights = write_insights(coordinate_reports, clusters, check)
 
     print("\nRanked hotspots (reported issue concentrations; not causal or predictive):")
     for _, cluster in clusters.iterrows():
@@ -272,6 +379,12 @@ def analyze() -> int:
     print(f"Saved: {CLUSTERS_FILE}")
     print(f"Saved: {REPORTS_FILE}")
     print(f"Saved: {MAP_FILE}")
+    print("\nChoosing the number of clusters (higher silhouette = better):")
+    for row in check.itertuples():
+        print(f"  k={row.k:<2} silhouette {row.silhouette:.3f}")
+    print(f"Saved: {K_CHECK_FILE}")
+    print(f"Saved: {INSIGHTS_FILE}")
+    print("\n" + insights)
     return 0
 
 
