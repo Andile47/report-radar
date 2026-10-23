@@ -181,6 +181,27 @@ def build_map(reports: pd.DataFrame, clusters: pd.DataFrame) -> None:
             blur=14,
             min_opacity=0.25,
         ).add_to(map_view)
+
+    centre_layer = folium.FeatureGroup(name="Ranked hotspot centres", show=True)
+    for _, cluster in clusters.iterrows():
+        urgency = cluster["average_urgency"]
+        urgency_text = "Not available" if pd.isna(urgency) else f"{urgency:.2f} / 5"
+        popup = (
+            f"<b>Hotspot rank #{int(cluster['rank'])}</b><br>"
+            f"Reports: {int(cluster['report_count'])}<br>"
+            f"Most reported area: {escape(str(cluster['dominant_ward_or_suburb']))}<br>"
+            f"Most common category: {escape(str(cluster['dominant_category']))}<br>"
+            f"Average urgency: {urgency_text}<br><br>"
+            "A concentration of reports, not evidence of cause or future problems."
+        )
+        folium.Marker(
+            location=[cluster["center_latitude"], cluster["center_longitude"]],
+            popup=folium.Popup(popup, max_width=320),
+            tooltip=f"Rank #{int(cluster['rank'])}: {int(cluster['report_count'])} reports",
+            icon=folium.Icon(color="red", icon="info-sign"),
+        ).add_to(centre_layer)
+    centre_layer.add_to(map_view)
+    folium.LayerControl(collapsed=False).add_to(map_view)
     map_view.save(MAP_FILE)
 
 
