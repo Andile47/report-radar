@@ -1,0 +1,31 @@
+id,description,expected_category,expected_urgency,why_tricky,keyword_category,keyword_urgency,keyword_reason
+T01,"pipe burst on 5th ave, water evrywhere and kids walking thru it",water,4,typos,water,5,"water: pipe burst, water | level 5: pipe burst"
+T02,No water,water,3,very short,water,3,water: no water | level 3: no water
+T03,The tap at the communal stand hasnt worked since Friday,water,3,no keyword 'water',water,2,"water: tap | no urgency words, default level"
+T04,"Amanzi awekho, siyacela help",water,3,isiZulu,water,3,water: amanzi | level 3: amanzi
+T05,Water coming out of the electricity box on the pole,electricity,5,mixed: water + electricity danger,electricity,2,"electricity: electricity | no urgency words, default level"
+T06,Brown smelly water from my tap,water,4,health risk wording,water,2,"water: water, tap | no urgency words, default level"
+T07,"Power has been off for 2 days, food going off",electricity,3,'power' without 'electricity',electricity,2,"electricity: power | no urgency words, default level"
+T08,Sparks flying from the wires near the creche,electricity,5,danger near children,electricity,2,"electricity: sparks, wires | no urgency words, default level"
+T09,Ugesi awukho kusukela izolo,electricity,3,isiZulu,electricity,3,electricity: ugesi | level 3: ugesi
+T10,Lights keep flickering and my fridge died,electricity,3,'lights' could mean streetlights,electricity,2,electricity: flickering | level 2: flickering
+T11,Somebody stole the cables again,streetlights,3,cable theft without saying lights,streetlights,3,streetlights: cables | level 3: cables
+T12,"Its pitch black on our road at night, very dangerous",streetlights,3,'road' could mean roads,roads,2,"roads: road | no urgency words, default level"
+T13,The lamp outside number 14 is broken,streetlights,2,'lamp' only,streetlights,2,streetlights: lamp | level 2: broken
+T14,Massive hole in the road swallowed a car tyre,roads,4,'hole' not 'pothole',roads,2,"roads: hole, road | no urgency words, default level"
+T15,pothoel on london rd,roads,3,typo in key word,roads,3,roads: pothole | level 3: pothole
+T16,Robot not working at Selborne and 4th,roads,4,SA slang: robot = traffic light,roads,4,roads: robot | level 4: robot
+T17,Tar is cracking a bit near the shop,roads,1,minor,roads,2,"roads: tar | no urgency words, default level"
+T18,Road caved in near the river after the rain,roads,5,collapse without 'sinkhole',roads,2,"roads: road | no urgency words, default level"
+T19,Sewer pipe burst and it stinks,sanitation,4,'pipe burst' also a water keyword,other,5,two problems reported (sanitation and water) | level 5: pipe burst
+T20,Toilets at the hostel are blocked,sanitation,3,plural and blocked,sanitation,3,sanitation: toilets | level 3: blocked
+T21,Raw sewage running into the school yard,sanitation,5,critical: health + school,sanitation,5,sanitation: sewage | level 5: raw sewage
+T22,Drain overflowing onto the road,sanitation,3,'road' could mean roads,other,2,"tie between roads and sanitation | no urgency words, default level"
+T23,Bins have not been collected for 3 weeks,refuse,3,'bins' only,refuse,3,refuse: bins | level 3: weeks
+T24,People dumping old fridges and mattresses on the corner,refuse,2,dumping without 'illegal',refuse,2,refuse: dumping | level 2: dumping
+T25,Rats everywhere because of the rubbish pile,refuse,3,health angle,refuse,3,"refuse: rubbish, rats | level 3: rats"
+T26,Dead dog on the pavement,refuse,3,no category word,other,2,"no service keywords found | no urgency words, default level"
+T27,Something is wrong on our street please come,other,2,vague,other,2,"no service keywords found | no urgency words, default level"
+T28,Thank you for fixing the pothole last week!,other,1,not a complaint,other,1,"looks like a thank-you, not a complaint | not a complaint"
+T29,No water and no electricity since the storm,other,4,two problems - needs review,other,3,tie between water and electricity | level 3: no water
+T30,Fire in the transformer box!!,electricity,5,emergency,electricity,5,electricity: transformer | level 5: fire
