@@ -34,7 +34,7 @@ Re-run the script whenever `data/reports.csv` changes. The dashboard picks up `o
 | --- | --- |
 | `projected_workload.csv` | **Hand-over table:** expected reports for each of the next 4 weeks, likely range, and the 4-week total |
 | `forecast_chart.png` | **Hand-over chart:** past volume, moving average, trend line and forecast |
-| `insights.md` | **Hand-over text:** the 3 sentences plus the workload table, for the dashboard's Forecast tab (replaces the dashboard's "TODO (Role 2)" note) |
+| `insights.md` | **Hand-over text:** the 3 sentences plus the workload table, shown under "More detail" on the dashboard's Workload forecast tab |
 | `output.csv` | `week_start, actual, forecast`, the dashboard contract. History rows have `actual`; the next 4 weeks have `forecast`. The last history week has both so the chart lines join. |
 | `output_by_category.csv` | Same as above per category, plus the `model` chosen for it |
 | `metrics.json` | MAE of every model, the selected model, and accuracy per category |

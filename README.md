@@ -24,11 +24,15 @@ To run the tests: `pytest forecast intake`
 
 ## What the dashboard shows
 
-- **Headline numbers:** total reports, average urgency, high-urgency reports (4-5) and reports that need a person to review them.
-- **Forecast tab:** reports expected next week and over the next 4 weeks with a likely range, a chart of weekly volume and the forecast, the workload table, a forecast per category, and 3 plain sentences on what it means. A surge alert appears at the top if a rise of 15% or more is forecast.
-- **Hotspots tab:** an interactive map of where reports cluster (needs an internet connection for the map tiles), a ranked list of areas from busiest to quietest, and what the map means.
-- **Reports tab:** every report with the classifier's category, urgency, review flag and the reason it was classified that way.
-- **Filters:** category, ward, minimum urgency, needs-review and a description search. They filter the headline numbers and the Reports tab; the forecast and hotspots always use all reports.
+The dashboard is written for readers without a technical background: it opens with a plain-language summary, every number says what it means, and technical detail sits in "More detail" sections.
+
+- **Summary box:** a green box (or a red surge alert) saying how many reports to expect next week and next month, which problem type to keep an eye on, and which areas are busiest.
+- **Headline numbers:** reports in the last year, urgent reports (high or danger to life), reports not fixed yet, and urgent reports not fixed yet. The urgency scale is explained underneath.
+- **Workload forecast tab:** reports expected next week and over the next 4 weeks; a chart of the past year (blue) and the forecast (orange) with its likely range shaded; "What this means" in plain bullets; a week-by-week table; and a chart for one problem type, opening on the one that is rising.
+- **Problem areas tab:** a bar chart and table ranking the areas from busiest to quietest, what that means, and an interactive map (the map needs an internet connection).
+- **Reports tab:** opens on urgent reports that are not fixed yet, most urgent first, with plain column names. You can switch to reports that need checking by a person, or all reports, and show why the system chose each problem type and urgency.
+- **Filters (left):** type of problem, area, minimum urgency and a search of what residents wrote. They change the headline numbers and the Reports tab; the forecast and problem areas always use every report.
+- **How to read this page:** each tab has a short guide that opens with one click.
 
 ## How it fits together
 

@@ -24,7 +24,7 @@ Clusters are sorted from highest to lowest report count. The summary includes ea
 - `clusters.csv`: one row per cluster, ranked by report count. Includes cluster ID, report count, centre latitude/longitude, dominant suburb/ward, dominant category, and average urgency. The `cluster`, `area_name`, `latitude`, and `longitude` columns are compatibility aliases for the current dashboard.
 - `clustered_reports.csv`: every report with usable coordinates and its assigned cluster ID. Invalid-coordinate records are excluded.
 - `hotspot_map.html`: an interactive map, centred on Alexandra, with hotspot-centre markers, a report heatmap, layer controls, and an optional layer of individual reports.
-- `insights.md`: two to three sentences on what the map tells the municipality, plus the ranked list. The dashboard shows this text in the Hotspots tab.
+- `insights.md`: two to three sentences on what the map tells the municipality, plus the ranked list. The dashboard shows this text under "More detail" on the Problem areas tab.
 - `cluster_count_check.csv` / `.png`: elbow and silhouette scores for 2 to 10 clusters.
 
 ## What the map shows
