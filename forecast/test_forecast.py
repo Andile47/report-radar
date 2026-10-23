@@ -20,7 +20,7 @@ def make_reports(start="2026-01-07", days=70, per_day=3):
 def test_weekly_counts_start_on_monday_and_sum_to_total():
     reports = make_reports()
     weekly = fc.weekly_counts(reports)
-    assert (weekly.index.dayofweek == 0).all()
+    assert (weekly.index.day_of_week == 0).all()
     assert weekly.sum() == len(reports)
 
 
