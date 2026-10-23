@@ -92,6 +92,19 @@ def valid_coordinate_reports(reports: pd.DataFrame) -> pd.DataFrame | None:
     return valid_reports
 
 
+def assign_clusters(reports: pd.DataFrame) -> tuple[pd.DataFrame, KMeans, int]:
+    """Assign each usable report to a reproducible geographic cluster."""
+    cluster_count = min(5, len(reports))
+    if cluster_count < 5:
+        print(f"Fewer than 5 usable reports; adapting to {cluster_count} cluster(s).")
+    model = KMeans(n_clusters=cluster_count, random_state=42, n_init=10)
+    clustered_reports = reports.copy()
+    coordinates = clustered_reports[["latitude", "longitude"]]
+    clustered_reports["cluster_id"] = model.fit_predict(coordinates)
+    print(f"Clusters created: {cluster_count}")
+    return clustered_reports, model, cluster_count
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     return 0
