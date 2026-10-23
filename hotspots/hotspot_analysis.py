@@ -182,6 +182,24 @@ def build_map(reports: pd.DataFrame, clusters: pd.DataFrame) -> None:
             min_opacity=0.25,
         ).add_to(map_view)
 
+        points_layer = folium.FeatureGroup(name="Individual reports", show=False)
+        point_cluster = MarkerCluster().add_to(points_layer)
+        for _, report in reports.iterrows():
+            report_id = escape(str(report.get("report_id", "Report")))
+            category = escape(str(report.get("category", "Unknown")))
+            folium.CircleMarker(
+                location=[report["latitude"], report["longitude"]],
+                radius=3,
+                color="#245b75",
+                fill=True,
+                fill_opacity=0.7,
+                popup=(
+                    f"{report_id}<br>Category: {category}<br>"
+                    f"Cluster: {report['cluster_id']}"
+                ),
+            ).add_to(point_cluster)
+        points_layer.add_to(map_view)
+
     centre_layer = folium.FeatureGroup(name="Ranked hotspot centres", show=True)
     for _, cluster in clusters.iterrows():
         urgency = cluster["average_urgency"]
