@@ -52,6 +52,20 @@ def most_common_value(values: pd.Series) -> str:
     return str(clean_values.mode().iloc[0])
 
 
+def load_reports() -> pd.DataFrame | None:
+    """Read the shared dataset, returning None after a helpful error."""
+    if not DATA_FILE.exists():
+        print(f"Error: dataset not found: {DATA_FILE}")
+        return None
+    try:
+        return pd.read_csv(DATA_FILE)
+    except pd.errors.EmptyDataError:
+        print(f"Error: dataset is empty and has no column headers: {DATA_FILE}")
+    except (OSError, pd.errors.ParserError) as error:
+        print(f"Error: could not read dataset: {error}")
+    return None
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     return 0
