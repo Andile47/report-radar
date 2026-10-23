@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from html import escape
 from pathlib import Path
 import sys
 
@@ -152,6 +153,35 @@ def rank_clusters(clusters: pd.DataFrame) -> pd.DataFrame:
     ranked["latitude"] = ranked["center_latitude"]
     ranked["longitude"] = ranked["center_longitude"]
     return ranked[CLUSTER_COLUMNS]
+
+
+def add_map_heading(map_view: folium.Map) -> None:
+    """Label the map and clarify that these are simulated report clusters."""
+    heading = """
+    <div style="position: fixed; top: 12px; left: 50px; z-index: 9999;
+                background: white; padding: 10px 14px; border: 1px solid #777;
+                border-radius: 4px; font-family: Arial, sans-serif;">
+      <strong>Community Issue Reporter: Report Hotspots</strong><br>
+      <span style="font-size: 12px;">Simulated data. Report concentrations,
+      not proven causes or predictions.</span>
+    </div>
+    """
+    map_view.get_root().html.add_child(folium.Element(heading))
+
+
+def build_map(reports: pd.DataFrame, clusters: pd.DataFrame) -> None:
+    """Create the Johannesburg map and show report density as a heat layer."""
+    map_view = folium.Map(location=JOHANNESBURG, zoom_start=11, control_scale=True)
+    add_map_heading(map_view)
+    if not reports.empty:
+        HeatMap(
+            reports[["latitude", "longitude"]].values.tolist(),
+            name="Report concentration",
+            radius=18,
+            blur=14,
+            min_opacity=0.25,
+        ).add_to(map_view)
+    map_view.save(MAP_FILE)
 
 
 def analyze() -> int:
