@@ -259,8 +259,19 @@ def analyze() -> int:
 
     clustered_reports, model, _ = assign_clusters(coordinate_reports)
     clusters = rank_clusters(summarize_clusters(clustered_reports, model))
+    clustered_reports.to_csv(REPORTS_FILE, index=False)
     clusters.to_csv(CLUSTERS_FILE, index=False)
+    build_map(clustered_reports, clusters)
+
+    print("\nRanked hotspots (reported issue concentrations; not causal or predictive):")
+    for _, cluster in clusters.iterrows():
+        print(
+            f"  #{int(cluster['rank'])}: {int(cluster['report_count'])} reports | "
+            f"{cluster['dominant_ward_or_suburb']} | {cluster['dominant_category']}"
+        )
     print(f"Saved: {CLUSTERS_FILE}")
+    print(f"Saved: {REPORTS_FILE}")
+    print(f"Saved: {MAP_FILE}")
     return 0
 
 
