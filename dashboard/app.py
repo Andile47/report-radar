@@ -27,6 +27,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+from capacity import show_capacity_planner
 
 ROOT = Path(__file__).resolve().parent.parent
 REPORTS_FILE = ROOT / "data" / "reports.csv"
@@ -371,6 +372,8 @@ with tab_f:
                     else "Not built yet: run `python forecast/forecast.py`.")
         st.caption("Method: reports are counted per week; four simple models are tested on the "
                    "last 12 weeks and the most accurate one makes the forecast. See forecast/README.md.")
+
+    show_capacity_planner()
 
 with tab_h:
     st.subheader("Where the problems are")
