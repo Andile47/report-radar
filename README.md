@@ -48,11 +48,11 @@ data/reports.csv ──► intake/classifier.py ──► category, urgency, rev
 
 | Role | Name | Folder | Hands over |
 | --- | --- | --- | --- |
-| 1. Data Lead | *to confirm* | `data/` | `reports.csv`, 20-row sample, generator script, data check |
+| 1. Data Lead | Thembelihle | `data/` | `reports.csv`, 20-row sample, generator script, data check |
 | 2. Forecast Lead | Dikeledi | `forecast/` | 4-week workload table, forecast chart, insight sentences |
 | 3. Hotspot Lead | Tshepo Tleane | `hotspots/` | Hotspot map, ranked areas, insight sentences |
 | 4. Intake and Urgency Lead | petroblyn | `intake/` | Classifier, LLM version, 30-report test result |
-| 5. Dashboard, Integration and Docs Lead | Andile Khoza *(to confirm)* | `dashboard/`, `docs/` | Dashboard, README, one-page explanation, demo script |
+| 5. Dashboard, Integration and Docs Lead | Andile Khoza | `dashboard/`, `docs/` | Dashboard, README, one-page explanation, demo script |
 
 Each folder has its own README explaining how that part works, its results and its limitations.
 
