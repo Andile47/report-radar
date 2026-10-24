@@ -28,3 +28,4 @@ AI can sound confident and still be wrong, so these were checked by running the 
 - Hotspot Lead: the prompts used to write `hotspot_analysis.py`.
 - Intake Lead: the prompts used for the first version of `classifier.py`.
 - Dashboard Lead: the prompt used for the starter dashboard.
+- Data Lead: the prompt used to build the capacity planner (`dashboard/capacity.py`): "My Streamlit dashboard reads forecast/projected_workload.csv and data/reports.csv. Write dashboard/capacity.py with a function plan(crews, per_crew, expected_per_week, unfixed_now) and a function show_capacity_planner() that asks a manager for crews and reports per crew and answers: do we have enough crews? Also write pytest tests for plan(). Explain each step like I am new to Python."
