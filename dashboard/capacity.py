@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parent.parent
 WORKLOAD_FILE = ROOT / "forecast" / "projected_workload.csv"
 REPORTS_FILE = ROOT / "data" / "reports.csv"
 
-COLOR_EXPECTED = "#2c5282"  # dark blue: reports expected
-COLOR_CAPACITY = "#dd6b20"  # orange: what the crews can fix
+COLOR_EXPECTED = "#2C2E3A"  # dark blue: reports expected
+COLOR_CAPACITY = "#0A21C0"  # orange: what the crews can fix
 
 
 def plan(crews: int, per_crew: int, expected_per_week: list[float], unfixed_now: int) -> dict:
@@ -107,12 +107,12 @@ def show_capacity_planner() -> None:
                    f"That covers the {exp} expected, with about {spare} to spare.")
         if unfixed_now:
             st.caption(f"The {unfixed_now:,} reports not fixed yet would fall to about "
-                       f"{result['unfixed_after']:,} by {by_date}.")
+                       f"{round(result['unfixed_after']):,} by {by_date}.")
     else:
         short = round(-result["gap_avg"])
         st.error(f"{crews} crews can fix about {cap} a week, {short} short of the {exp} expected. "
                  f"Unfixed reports will grow from about {unfixed_now:,} to about "
-                 f"{result['unfixed_after']:,} by {by_date}. "
+                 f"{round(result['unfixed_after']):,} by {by_date}. "
                  f"You need {result['crews_needed']} crews.")
 
     chart_data = pd.DataFrame({
