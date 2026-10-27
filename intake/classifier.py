@@ -230,7 +230,9 @@ def process_csv(input_file: Path = INPUT_FILE, output_file: Path = OUTPUT_FILE,
     df.to_csv(output_file, index=False)
     logged = log_classifications(df)
 
-    print(f"Processed {len(df):,} reports -> {Path(output_file).relative_to(ROOT)}")
+    shown = Path(output_file).resolve()
+    shown = shown.relative_to(ROOT) if shown.is_relative_to(ROOT) else shown
+    print(f"Processed {len(df):,} reports -> {shown}")
     if logged:
         print(f"Logged {logged:,} decisions -> governance/logs/decisions.csv")
     print(f"Sent for review (category 'other'): {df['review_required'].mean():.1%}")
