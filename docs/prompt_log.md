@@ -10,6 +10,7 @@ A record of how AI tools were used on Report Radar, as asked for in the responsi
 | 22 Oct 2026 | Dikeledi | Claude | Check the forecast against the role guide (moving average plus trend, workload table, matplotlib chart, plain-English summary, limits) and add what is missing | Added the chart, workload table, combined moving-average-plus-trend model and the category driving the change |
 | 23 Oct 2026 | Dikeledi | Claude | Check the whole project against the five-role guide and list what is missing | Found gaps in data, intake, dashboard and docs |
 | 23 Oct 2026 | Dikeledi | Claude | Implement everything missing, one commit per role | Data generator, sample and checks; classifier rebuilt with tests and an LLM version; cluster-count check and map insights; dashboard integration, README, this log, one-pager and demo script |
+| 27 Oct 2026 | Dikeledi | Claude | Week 6, Role 4 (Logging and Transparency Lead): build a decision log, connect it to the classifier and forecast without changing outputs, and write model cards, transparency notes and risk register rows | Checked that every output file is identical with logging on and off (fingerprint comparison), that personal details are masked in the log, and that all tests pass. Every figure in the model cards was checked against the real outputs. |
 
 ## What we checked ourselves
 

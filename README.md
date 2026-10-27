@@ -20,7 +20,7 @@ streamlit run dashboard/app.py    # opens the dashboard in your browser
 
 `run_all.py` checks the data, classifies the reports, tests the classifier, builds the forecast and finds the hotspots, in that order. The dashboard also runs without it, showing labelled placeholder data for any part that hasn't been built.
 
-To run the tests: `pytest forecast intake`
+To run the tests: `pytest forecast intake dashboard governance`
 
 ## What the dashboard shows
 
@@ -78,6 +78,15 @@ The agreed columns, used by every module:
 - [`docs/one_page_explanation.md`](docs/one_page_explanation.md): what Report Radar found, for non-technical readers
 - [`docs/demo_script.md`](docs/demo_script.md): the 5-minute demo, who presents what
 - [`docs/prompt_log.md`](docs/prompt_log.md): the AI prompts used, for the responsible-AI part of the rubric
+
+## Governance (Week 6)
+
+The `governance/` folder holds the risk and compliance work:
+
+- **Decision log:** every sorted report and every forecast run is recorded in `governance/logs/decisions.csv` (what was decided, when, why, and with which rules version). Personal details are hidden first. The log is created when you run `python run_all.py` and is not committed; `decisions_example.csv` shows the format. To switch it off, set `REPORT_RADAR_LOGGING=off`.
+- **Model cards:** one page each on what the forecast, classifier and hotspots do, how accurate they are and their limits (`governance/model_cards/`).
+- **Transparency notes:** a short "How this was decided" note for each dashboard tab (`governance/transparency_notes.md`).
+- **Risk register:** every risk the team found, scored and assigned (`governance/risk_register.csv`).
 
 ## Optional: the LLM classifier
 
