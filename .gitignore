@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Week 6 decision log: generated on every run, kept out of git (example kept)
+governance/logs/*
+!governance/logs/decisions_example.csv
