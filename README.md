@@ -1,5 +1,9 @@
 # Report Radar
 
+[![Open the live dashboard](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://reportradar.streamlit.app)
+
+**Live dashboard:** [reportradar.streamlit.app](https://reportradar.streamlit.app). No install needed; it runs on the synthetic data in this repo.
+
 Report Radar helps a municipality see **when** citizen reports are likely to surge and **where** problems are concentrated. Citizens report issues such as burst pipes, potholes and load-shedding faults. Report Radar sorts each report by type and urgency, forecasts the next month's workload, and maps the hotspots, so teams can plan before the surge arrives.
 
 **Week 5 focus:** predictive insights (forecast and hotspots) on a dashboard. All data is synthetic: no real personal information is used.
