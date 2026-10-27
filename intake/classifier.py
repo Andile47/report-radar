@@ -24,11 +24,17 @@ from __future__ import annotations
 
 import difflib
 import re
+import sys
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+try:  # Week 6 decision log; the classifier works the same without it
+    from governance.logger import log_decisions, make_row
+except ImportError:
+    log_decisions = make_row = None
 INPUT_FILE = ROOT / "data" / "reports.csv"
 CLEAN_FILE = Path(__file__).resolve().parent / "data" / "reports_clean.csv"
 OUTPUT_FILE = Path(__file__).resolve().parent / "data" / "reports_classified.csv"
@@ -222,8 +228,11 @@ def process_csv(input_file: Path = INPUT_FILE, output_file: Path = OUTPUT_FILE,
     df["review_required"] = results["review_required"]
     df["reason"] = results["reason"]
     df.to_csv(output_file, index=False)
+    logged = log_classifications(df)
 
     print(f"Processed {len(df):,} reports -> {Path(output_file).relative_to(ROOT)}")
+    if logged:
+        print(f"Logged {logged:,} decisions -> governance/logs/decisions.csv")
     print(f"Sent for review (category 'other'): {df['review_required'].mean():.1%}")
     if "category" in df.columns:
         agree = (df["predicted_category"] == df["category"]).mean()
@@ -232,6 +241,24 @@ def process_csv(input_file: Path = INPUT_FILE, output_file: Path = OUTPUT_FILE,
         gap = (df["predicted_urgency"] - df["urgency"]).abs()
         print(f"Urgency exact: {(gap == 0).mean():.1%}, within 1 level: {(gap <= 1).mean():.1%}")
     return df
+
+
+def log_classifications(df: pd.DataFrame) -> int:
+    """Write one decision-log row per classified report. Only reads df."""
+    if log_decisions is None:
+        return 0
+    ids = df["report_id"] if "report_id" in df.columns else pd.Series(df.index, index=df.index)
+    rows = [
+        make_row(
+            "classifier", report_id, description,
+            f"category={category}; urgency={urgency}; needs_review={'yes' if review else 'no'}",
+            reason,
+        )
+        for report_id, description, category, urgency, review, reason in zip(
+            ids, df["description"], df["predicted_category"], df["predicted_urgency"],
+            df["review_required"], df["reason"])
+    ]
+    return log_decisions(rows)
 
 
 if __name__ == "__main__":
