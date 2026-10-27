@@ -1,0 +1,21 @@
+report_id,timestamp,category,description,ward_or_suburb,latitude,longitude,urgency,status,hours_to_resolve
+ALX-000286,2025-11-16 13:29:08,streetlights,Whole street dark since the storm,Far East Bank,-26.100485,28.111589,3,resolved,283.5
+ALX-000413,2025-11-25 19:46:24,sanitation,"Blocked sewer, raw sewage running into the yard",Far East Bank,-26.104082,28.114294,5,resolved,21.8
+ALX-000616,2025-12-12 13:15:09,sanitation,Sewage overflowing from manhole on 4th Avenue,Old Alexandra,-26.099054,28.08699,3,open,
+ALX-000794,2025-12-24 11:01:37,refuse,Overflowing bins attracting rats,East Bank,-26.110364,28.103571,3,resolved,39.0
+ALX-001291,2026-01-29 10:18:18,refuse,Mound of building rubble blocking the pavement on 2th Avenue,East Bank,-26.104729,28.098265,2,resolved,145.4
+ALX-001490,2026-02-13 16:04:58,water,"Burst pipe flooding 16th Avenue, water running down the road",Old Alexandra,-26.10511,28.085884,5,resolved,11.7
+ALX-001532,2026-02-16 21:45:47,water,No water since this morning on 6th Avenue,East Bank,-26.103484,28.098279,3,resolved,43.5
+ALX-001534,2026-02-17 00:53:34,streetlights,Whole street dark since the storm,East Bank,-26.105006,28.103217,3,resolved,119.2
+ALX-001702,2026-03-03 09:49:38,roads,"Open manhole cover on 7th Avenue, someone could fall in",East Bank,-26.106757,28.103041,5,resolved,74.9
+ALX-001924,2026-03-20 09:48:31,refuse,Burning rubbish pile with smoke near houses,East Bank,-26.111635,28.097829,4,resolved,73.3
+ALX-002926,2026-07-01 17:38:28,roads,Speed hump broken and sticking out,East Bank,-26.103954,28.096391,2,resolved,104.7
+ALX-002932,2026-07-02 10:42:42,streetlights,"High mast light off for a week, muggings reported",Old Alexandra,-26.105614,28.08553,4,open,
+ALX-003063,2026-07-17 17:16:41,water,Communal standpipe near 3th Avenue not working,East Bank,-26.105791,28.104348,3,resolved,27.4
+ALX-003094,2026-07-20 22:52:19,sanitation,Sewage flowing into the Jukskei near homes where children play,Old Alexandra,-26.100408,28.08988,5,resolved,18.2
+ALX-003111,2026-07-22 14:42:17,sanitation,Sewage overflowing from manhole on 9th Avenue,Setswetla,-26.100504,28.099709,4,open,
+ALX-003225,2026-08-03 19:22:42,electricity,Illegal connections sparking on the pole near 2th Avenue,Old Alexandra,-26.10559,28.090135,4,resolved,8.9
+ALX-003458,2026-08-28 06:47:13,electricity,Flickering power damaging appliances,Tsutsumani,-26.111877,28.111259,2,open,
+ALX-003526,2026-09-03 07:13:48,roads,Speed hump broken and sticking out,Old Alexandra,-26.102063,28.09063,2,resolved,231.3
+ALX-003875,2026-10-07 20:32:54,electricity,"Transformer exploded, whole section without power",Pan Africa,-26.099137,28.093226,5,resolved,6.0
+ALX-003922,2026-10-13 13:03:37,sanitation,Sewage overflowing from manhole on Roosevelt Street,East Bank,-26.107467,28.09775,4,in_progress,

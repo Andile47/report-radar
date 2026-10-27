@@ -1,0 +1,4 @@
+timestamp,component,report_id,input_summary,output,reason,rules_version
+2026-10-27T13:40:02,classifier,ALX-003990,"Burst pipe flooding 15th Avenue, water running down the road",category=water; urgency=5; needs_review=no,"water: burst pipe, water | level 5: burst pipe",classifier-2026.10
+2026-10-27T13:40:02,classifier,ALX-003991,Something is wrong on our street please come,category=other; urgency=2; needs_review=yes,"no service keywords found | no urgency words, default level",classifier-2026.10
+2026-10-27T13:40:04,forecast,,"51 full weeks of reports, 27 Oct 2025 to 12 Oct 2026",next 4 weeks: 69 / 69 / 69 / 69 reports (total 276),"moving_average chosen: lowest backtest error, 4.0 reports a week (naive 5.0, moving_average_trend 6.4, linear_trend 7.2)",forecast-2026.10

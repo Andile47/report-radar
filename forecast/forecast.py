@@ -17,6 +17,7 @@ Writes (all in this folder):
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -24,6 +25,11 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+try:  # Week 6 decision log; the forecast works the same without it
+    from governance.logger import log_decision
+except ImportError:
+    log_decision = None
 REPORTS_FILE = ROOT / "data" / "reports.csv"
 OUT_DIR = Path(__file__).resolve().parent
 OUTPUT_FILE = OUT_DIR / "output.csv"
@@ -406,6 +412,7 @@ def main() -> None:
     workload.to_csv(WORKLOAD_FILE, index=False)
     insights = write_insights(weekly, future, metrics, by_category, workload)
     plot_forecast(weekly, future, scores[best], best, CHART_FILE)
+    logged = log_forecast(weekly, future, best, scores)
 
     print(f"Weeks of history: {len(weekly)} "
           f"({weekly.index[0]:%Y-%m-%d} to {weekly.index[-1]:%Y-%m-%d})")
@@ -418,7 +425,25 @@ def main() -> None:
     for path in (OUTPUT_FILE, CATEGORY_FILE, METRICS_FILE, WORKLOAD_FILE,
                  INSIGHTS_FILE, CHART_FILE):
         print(f"Wrote {path.relative_to(ROOT)}")
+    if logged:
+        print("Logged this forecast -> governance/logs/decisions.csv")
     print("\n" + insights)
+
+
+def log_forecast(weekly: pd.Series, future: pd.Series, best: str,
+                 scores: dict[str, float]) -> int:
+    """Write one decision-log row for this forecast run. Only reads its inputs."""
+    if log_decision is None:
+        return 0
+    others = ", ".join(f"{name} {mae:.1f}" for name, mae in
+                       sorted(scores.items(), key=lambda kv: kv[1]) if name != best)
+    return log_decision(
+        "forecast", "",
+        f"{len(weekly)} full weeks of reports, {weekly.index[0]:%d %b %Y} to {weekly.index[-1]:%d %b %Y}",
+        f"next {len(future)} weeks: " + " / ".join(f"{v:.0f}" for v in future)
+        + f" reports (total {future.sum():.0f})",
+        f"{best} chosen: lowest backtest error, {scores[best]:.1f} reports a week ({others})",
+    )
 
 
 if __name__ == "__main__":
