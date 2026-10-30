@@ -136,7 +136,11 @@ URGENCY_PHRASES = {
         "speed hump", "dumping", "rubble", "not collected", "grey water", "broken"],
     1: ["small crack", "minor", "cosmetic", "on all day", "missed our street"],
 }
-VULNERABLE = ["school", "clinic", "hospital", "creche", "children", "kids"]
+VULNERABLE = [
+    "school", "clinic", "hospital", "creche", "children", "kids", "elderly",
+    "older adult", "older person", "senior", "gogo", "disabled", "disability",
+    "wheelchair", "pregnant", "expectant mother",
+]
 DEFAULT_URGENCY = 2
 
 VOCABULARY = sorted({word for words in CATEGORY_KEYWORDS.values() for phrase in words
@@ -148,7 +152,7 @@ def normalise(description: str) -> str:
     """Lower-case, tidy spaces, and fix small typos in keyword-like words."""
     text = re.sub(r"\s+", " ", str(description).lower()).strip()
     fixed = []
-    for word in re.findall(r"[a-z'-]+|\S", text):
+    for word in re.findall(r"[^\W\d_]+(?:['-][^\W\d_]+)*|\S", text):
         if len(word) >= 4 and word not in VOCABULARY:
             # same first letter: real typos rarely change it ("whole" is not "hole")
             match = difflib.get_close_matches(word, VOCABULARY, n=1, cutoff=0.85)
@@ -158,7 +162,7 @@ def normalise(description: str) -> str:
 
 
 def contains(text: str, phrase: str) -> bool:
-    return re.search(r"(?<![a-z])" + re.escape(phrase) + r"(?![a-z])", text) is not None
+    return re.search(r"(?<!\w)" + re.escape(phrase) + r"(?!\w)", text) is not None
 
 
 # ---------- step 2: category ----------
