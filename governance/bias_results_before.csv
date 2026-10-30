@@ -1,0 +1,9 @@
+dimension,segment,reports,category_accuracy,urgency_accuracy,urgency_within_1_accuracy
+group,language,60,25.0%,25.0%,65.0%
+group,vulnerable,10,100.0%,20.0%,80.0%
+language,Afrikaans,10,10.0%,10.0%,60.0%
+language,English,10,100.0%,70.0%,80.0%
+language,Sepedi,10,0.0%,10.0%,60.0%
+language,Sesotho,10,0.0%,10.0%,60.0%
+language,Xitsonga,10,10.0%,20.0%,70.0%
+language,isiZulu,10,30.0%,30.0%,60.0%
