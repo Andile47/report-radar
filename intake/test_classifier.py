@@ -55,6 +55,13 @@ def test_school_or_clinic_raises_urgency():
     assert c.score_urgency("Pothole near the clinic") == c.score_urgency("Pothole") + 1
 
 
+def test_wheelchair_safety_report_gets_urgency_and_human_review():
+    result = c.process_report("Wheelchair user can't get home safely")
+    assert result["category"] == "other"
+    assert result["urgency"] == 4
+    assert result["review_required"]
+
+
 def test_every_result_has_a_reason():
     result = c.process_report("Big pothole on 10th Avenue damaging cars")
     assert result["reason"].startswith("roads")
