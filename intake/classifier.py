@@ -91,6 +91,8 @@ CATEGORY_KEYWORDS = {
         "garbage": 3, "rats": 1, "not collected": 2,
     },
     "streetlights": {
+        "isibani somgwaqo": 3, "lebone la seterateng": 3, "lebone la seterata": 3,
+        "rivoni ra le patu": 3, "straatlig": 3,
         "streetlight": 3, "streetlights": 3, "street light": 3, "street lights": 3,
         "high mast": 3, "light pole": 3, "lamp": 3, "lamp post": 3, "cable theft": 3,
         "cables": 2, "pole without lights": 3, "dark": 2,
