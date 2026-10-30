@@ -34,7 +34,12 @@ try:
     from try_report import show_try_report
 except ImportError:
     show_try_report = None
+try:
+    from risk_tab import show_risk_tab
+except ImportError:
+    show_risk_tab = None
 
+ROOT = Path(__file__).resolve().parent.parent
 ROOT = Path(__file__).resolve().parent.parent
 REPORTS_FILE = ROOT / "data" / "reports.csv"
 CLASSIFIED_FILE = ROOT / "intake" / "data" / "reports_classified.csv"
@@ -306,7 +311,8 @@ if missing:
     st.warning("Some parts show EXAMPLE data because the real files aren't built yet: "
                + ", ".join(missing) + ". Run `python run_all.py` to build them.")
 
-tab_o, tab_f, tab_h, tab_r = st.tabs(["Overview", "Forecast", "Problem areas", "Reports"])
+tab_o, tab_f, tab_h, tab_r, tab_k = st.tabs(["Overview", "Forecast", "Problem areas", "Reports",
+                                             "Risk & compliance"])
 
 # =====================================================================
 # OVERVIEW
@@ -597,3 +603,13 @@ with tab_r:
     if reports_source == "classifier":
         st.caption("Problem type and urgency are chosen automatically from what the resident wrote. "
                    "Reports that are too unclear are marked for a person to check.")
+
+# =====================================================================
+# RISK & COMPLIANCE
+# =====================================================================
+with tab_k:
+    if show_risk_tab is not None:
+        show_risk_tab()
+    else:
+        st.info("The risk and compliance tab isn't available yet: dashboard/risk_tab.py is missing.")
+        
