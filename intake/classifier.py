@@ -57,6 +57,9 @@ CATEGORY_KEYWORDS = {
     },
     "electricity": {
         "electricity": 3, "ugesi": 3, "power": 2, "load-shedding": 3, "loadshedding": 3,
+        "motlakase": 3, "gezi": 3, "krag": 3,
+        "ucingo oluphethe ugesi": 3, "terata e phelang": 3,
+        "terata ya mohlagase": 3, "waya lowu nga ni gezi": 3, "lewende draad": 3,
         "transformer": 3, "live wire": 3, "live wires": 3, "wires": 2, "wire": 2,
         "sparking": 3, "sparks": 3, "illegal connections": 3, "tripping": 3,
         "flickering": 2, "appliances": 2, "prepaid": 3,
