@@ -46,6 +46,11 @@ CATEGORIES = ["water", "electricity", "roads", "sanitation", "refuse", "streetli
 CATEGORY_KEYWORDS = {
     "water": {
         "burst pipe": 3, "pipe burst": 3, "no water": 3, "amanzi": 3, "standpipe": 3,
+        "pipe has burst": 3, "ipayipi liqhumile": 3, "peipi e phatlohile": 3,
+        "peipi e phatlogile": 3, "phayiphi yi pfurhile": 3, "pyp het gebars": 3,
+        "amanzi awasekho": 3, "akukho manzi": 3,
+        "ha ho na metsi": 3, "metsi": 1, "ga go na meetse": 3, "meetse": 1,
+        "a ku na mati": 3, "mati": 1, "geen water": 3, "water is af": 3,
         "water pressure": 3, "meter box": 2, "taps": 2, "tap": 2, "brown water": 3,
         "dirty water": 3, "water outage": 3, "trickle": 2, "leak": 1, "leaking": 1,
         "water": 1, "pipe": 1,
