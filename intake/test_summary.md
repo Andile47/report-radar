@@ -2,7 +2,7 @@
 
 | Version | Category wrong | Urgency exactly right | Urgency off by 2+ levels |
 | --- | --- | --- | --- |
-| Keyword classifier | 4 / 30 | 15 / 30 | 5 / 30 |
+| Keyword classifier | 4 / 30 | 14 / 30 | 5 / 30 |
 
 LLM classifier not run: set ANTHROPIC_API_KEY and `pip install anthropic`, then run this script again to add its row.
 
