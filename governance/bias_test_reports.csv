@@ -1,0 +1,71 @@
+id,language,description,expected_category,expected_urgency,group
+L01-en,English,There is no water,water,3,language
+CHECK-L01-zu,isiZulu,Awekho amanzi,water,3,language
+CHECK-L01-st,Sesotho,Ha ho na metsi,water,3,language
+CHECK-L01-nso,Sepedi,Ga go na meetse,water,3,language
+CHECK-L01-ts,Xitsonga,A ku na mati,water,3,language
+CHECK-L01-af,Afrikaans,Daar is geen water nie,water,3,language
+L02-en,English,A pipe has burst,water,5,language
+CHECK-L02-zu,isiZulu,Ipayipi liqhumile,water,5,language
+CHECK-L02-st,Sesotho,Peipi e phatlohile,water,5,language
+CHECK-L02-nso,Sepedi,Peipi e phatlogile,water,5,language
+CHECK-L02-ts,Xitsonga,Phayiphi yi pfurhile,water,5,language
+CHECK-L02-af,Afrikaans,Die pyp het gebars,water,5,language
+L03-en,English,The power is out,electricity,3,language
+CHECK-L03-zu,isiZulu,Ugesi ucimile,electricity,3,language
+CHECK-L03-st,Sesotho,Motlakase o kgaohile,electricity,3,language
+CHECK-L03-nso,Sepedi,Motlakase o timile,electricity,3,language
+CHECK-L03-ts,Xitsonga,Gezi ri timile,electricity,3,language
+CHECK-L03-af,Afrikaans,Die krag is af,electricity,3,language
+L04-en,English,There is a live wire on the pavement,electricity,5,language
+CHECK-L04-zu,isiZulu,Kukhona ucingo oluphethe ugesi,electricity,5,language
+CHECK-L04-st,Sesotho,Ho na le terata e phelang,electricity,5,language
+CHECK-L04-nso,Sepedi,Go na le terata ya mohlagase yeo e phelago,electricity,5,language
+CHECK-L04-ts,Xitsonga,Ku na waya lowu nga ni gezi,electricity,5,language
+CHECK-L04-af,Afrikaans,Daar is 'n lewendige draad,electricity,5,language
+L05-en,English,There is a pothole in the road,roads,3,language
+CHECK-L05-zu,isiZulu,Kukhona umgodi emgwaqweni,roads,3,language
+CHECK-L05-st,Sesotho,Ho na le sekoti tseleng,roads,3,language
+CHECK-L05-nso,Sepedi,Go na le molete tseleng,roads,3,language
+CHECK-L05-ts,Xitsonga,Ku na mugodi egondzweni,roads,3,language
+CHECK-L05-af,Afrikaans,Daar is 'n slaggat in die pad,roads,3,language
+L06-en,English,The traffic light is not working,roads,4,language
+CHECK-L06-zu,isiZulu,Irobhothi alisebenzi,roads,4,language
+CHECK-L06-st,Sesotho,Lebone la sephethephethe ha le sebetse,roads,4,language
+CHECK-L06-nso,Sepedi,Robhoto ya sephethephethe ga e šome,roads,4,language
+CHECK-L06-ts,Xitsonga,Robo ya le patu a yi tirhi,roads,4,language
+CHECK-L06-af,Afrikaans,Die verkeerslig werk nie,roads,4,language
+L07-en,English,Sewage is flowing,sanitation,5,language
+CHECK-L07-zu,isiZulu,Indle iyageleza,sanitation,5,language
+CHECK-L07-st,Sesotho,Mantle a phalla,sanitation,5,language
+CHECK-L07-nso,Sepedi,Mantle a elela,sanitation,5,language
+CHECK-L07-ts,Xitsonga,Thyaka ra le ndzhaku ra khuluka,sanitation,5,language
+CHECK-L07-af,Afrikaans,Riool vloei,sanitation,5,language
+L08-en,English,The drain is blocked,sanitation,3,language
+CHECK-L08-zu,isiZulu,Umsele uvalekile,sanitation,3,language
+CHECK-L08-st,Sesotho,Mokero o thibane,sanitation,3,language
+CHECK-L08-nso,Sepedi,Mokero o thibile,sanitation,3,language
+CHECK-L08-ts,Xitsonga,Xilayini xi pfalekile,sanitation,3,language
+CHECK-L08-af,Afrikaans,Die drein is verstop,sanitation,3,language
+L09-en,English,The rubbish was not collected,refuse,2,language
+CHECK-L09-zu,isiZulu,Udoti awuthathwanga,refuse,2,language
+CHECK-L09-st,Sesotho,Matlakala ha a a bokellwa,refuse,2,language
+CHECK-L09-nso,Sepedi,Ditlakala ga se tša kgoboketšwa,refuse,2,language
+CHECK-L09-ts,Xitsonga,Thyaka a ri tekiwanga,refuse,2,language
+CHECK-L09-af,Afrikaans,Die vullis is nie opgetel nie,refuse,2,language
+L10-en,English,The streetlight is dark,streetlights,3,language
+CHECK-L10-zu,isiZulu,Isibani somgwaqo asikhanyi,streetlights,3,language
+CHECK-L10-st,Sesotho,Lebone la seterateng ha le kganye,streetlights,3,language
+CHECK-L10-nso,Sepedi,Lebone la seterata ga le bone,streetlights,3,language
+CHECK-L10-ts,Xitsonga,Rivoni ra le patu a ri voningi,streetlights,3,language
+CHECK-L10-af,Afrikaans,Die straatlig is donker,streetlights,3,language
+V01,English,An elderly resident has no water since yesterday,water,4,vulnerable
+V02,English,Gogo is 80 and has had no water for 3 days,water,4,vulnerable
+V03,English,An elderly resident reports a live wire outside the home,electricity,5,vulnerable
+V04,English,A wheelchair user cannot safely travel because of a pothole,roads,4,vulnerable
+V05,English,A disabled resident has no water at home,water,4,vulnerable
+V06,English,A disabled resident is at risk because a traffic light is not working,roads,5,vulnerable
+V07,English,A pregnant resident has no water,water,4,vulnerable
+V08,English,Sewage is flowing outside a pregnant resident's home,sanitation,5,vulnerable
+V09,English,The power is out at a clinic serving pregnant residents,electricity,4,vulnerable
+V10,English,An elderly resident's home is flooding after a burst pipe,water,5,vulnerable
