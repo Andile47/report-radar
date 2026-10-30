@@ -83,6 +83,9 @@ CATEGORY_KEYWORDS = {
         "drain blocked": 3, "drain": 1, "stinks": 1, "smell": 1,
     },
     "refuse": {
+        "udoti awuthathwanga": 3, "matlakala ha a a bokellwa": 3,
+        "ditlakala ga se tša kgoboketšwa": 3, "thyaka a ri tekiwanga": 3,
+        "vullis is nie opgetel nie": 3,
         "rubbish": 3, "refuse": 3, "dumping": 3, "illegal dumping": 3, "rubble": 3,
         "bins": 3, "bin": 2, "litter": 3, "dead animal": 3,
         "garbage": 3, "rats": 1, "not collected": 2,
