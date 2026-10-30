@@ -75,6 +75,10 @@ CATEGORY_KEYWORDS = {
         "hole": 2, "road": 1, "intersection": 1, "taxis": 1,
     },
     "sanitation": {
+        "indle iyageleza": 3, "mantle a phalla": 3, "mantle a elela": 3,
+        "thyaka ra le ndzhaku ra khuluka": 3, "riool vloei": 3,
+        "umsele uvalekile": 3, "mokero o thibane": 3, "mokero o thibile": 3,
+        "xilayini xi pfalekile": 3, "drein is verstop": 3,
         "sewage": 3, "sewer": 3, "toilet": 3, "toilets": 3, "grey water": 3,
         "drain blocked": 3, "drain": 1, "stinks": 1, "smell": 1,
     },
