@@ -66,6 +66,10 @@ CATEGORY_KEYWORDS = {
     },
     "roads": {
         "pothole": 3, "potholes": 3, "speed hump": 3, "tar": 2, "road surface": 3,
+        "umgodi emgwaqweni": 3, "sekoti tseleng": 3, "molete tseleng": 3,
+        "mugodi egondzweni": 3, "slaggat": 3,
+        "irobhothi alisebenzi": 3, "lebone la sephethephethe": 3,
+        "robhoto ya sephethephethe": 3, "robo ya le patu": 3, "verkeerslig": 3,
         "road collapsed": 3, "sinkhole": 3, "open manhole": 3,
         "manhole cover": 3, "stormwater drain": 3, "robot": 3, "traffic light": 3,
         "hole": 2, "road": 1, "intersection": 1, "taxis": 1,
