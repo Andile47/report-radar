@@ -2,12 +2,12 @@ id,description,expected_category,expected_urgency,why_tricky,keyword_category,ke
 T01,"pipe burst on 5th ave, water evrywhere and kids walking thru it",water,4,typos,water,5,"water: pipe burst, water | level 5: pipe burst"
 T02,No water,water,3,very short,water,3,water: no water | level 3: no water
 T03,The tap at the communal stand hasnt worked since Friday,water,3,no keyword 'water',water,2,"water: tap | no urgency words, default level"
-T04,"Amanzi awekho, siyacela help",water,3,isiZulu,water,3,water: amanzi | level 3: amanzi
+T04,"Amanzi awekho, siyacela help",water,3,isiZulu,water,3,water: amanzi awasekho | level 3: amanzi
 T05,Water coming out of the electricity box on the pole,electricity,5,mixed: water + electricity danger,electricity,2,"electricity: electricity | no urgency words, default level"
 T06,Brown smelly water from my tap,water,4,health risk wording,water,2,"water: water, tap | no urgency words, default level"
 T07,"Power has been off for 2 days, food going off",electricity,3,'power' without 'electricity',electricity,2,"electricity: power | no urgency words, default level"
 T08,Sparks flying from the wires near the creche,electricity,5,danger near children,electricity,2,"electricity: sparks, wires | no urgency words, default level"
-T09,Ugesi awukho kusukela izolo,electricity,3,isiZulu,electricity,3,electricity: ugesi | level 3: ugesi
+T09,Ugesi awukho kusukela izolo,electricity,3,isiZulu,electricity,2,"electricity: ugesi | no urgency words, default level"
 T10,Lights keep flickering and my fridge died,electricity,3,'lights' could mean streetlights,electricity,2,electricity: flickering | level 2: flickering
 T11,Somebody stole the cables again,streetlights,3,cable theft without saying lights,streetlights,3,streetlights: cables | level 3: cables
 T12,"Its pitch black on our road at night, very dangerous",streetlights,3,'road' could mean roads,roads,2,"roads: road | no urgency words, default level"
