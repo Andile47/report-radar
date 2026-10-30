@@ -1,4 +1,5 @@
 """Tests for the intake classifiers. Run from the repo root:  pytest intake"""
+import csv
 import sys
 from pathlib import Path
 
@@ -7,6 +8,17 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import classifier as c  # noqa: E402
 import llm_classifier as llm  # noqa: E402
+
+BIAS_CASES_PATH = Path(__file__).resolve().parent.parent / "governance" / "bias_test_reports.csv"
+with BIAS_CASES_PATH.open(encoding="utf-8-sig", newline="") as bias_cases_file:
+    BIAS_CASES = list(csv.DictReader(bias_cases_file))
+
+
+@pytest.mark.parametrize("report", BIAS_CASES, ids=lambda report: report["id"])
+def test_bias_report_examples(report):
+    result = c.process_report(report["description"])
+    assert result["category"] == report["expected_category"]
+    assert result["urgency"] == int(report["expected_urgency"])
 
 
 @pytest.mark.parametrize("text, category", [
