@@ -105,7 +105,12 @@ NOT_A_COMPLAINT = [r"\bthank(s| you)\b.*\b(fix|fixed|fixing|sorted|repaired)\b"]
 
 # 2. Urgency phrases: phrase -> level. The highest level found wins.
 URGENCY_PHRASES = {
-    5: ["live wire", "live wires", "transformer exploded", "exploded", "fire", "electrocut",
+    5: ["live wire", "live wires", "pipe has burst", "ipayipi liqhumile",
+        "peipi e phatlohile", "peipi e phatlogile", "phayiphi yi pfurhile",
+        "ucingo oluphethe ugesi", "terata e phelang", "terata ya mohlagase",
+        "waya lowu nga ni gezi", "lewende draad", "indle iyageleza", "mantle a phalla",
+        "mantle a elela", "thyaka ra le ndzhaku ra khuluka", "riool vloei",
+        "sewage is flowing", "pyp het gebars", "transformer exploded", "exploded", "fire", "electrocut",
         "road collapsed", "sinkhole", "open manhole", "someone could fall",
         "raw sewage", "sewage flowing", "burst pipe", "pipe burst", "whole block"],
     4: ["sparking", "illegal connections", "brown water", "dirty water", "can't drink",
