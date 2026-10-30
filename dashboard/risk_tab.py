@@ -142,7 +142,8 @@ def fairness_findings(df: pd.DataFrame | None) -> list[str]:
     if df is None or df.empty:
         return ["Area fairness results have not been added yet (governance/area_fairness.csv)."]
     label = _pick_column(df, ("ward", "area", "suburb"), numeric=False) or _first_text_column(df)
-    value = _pick_column(df, ("wait", "hour", "resolve", "median", "mean", "average"), numeric=True)
+    value = (_pick_column(df, ("urgent",), numeric=True)
+             or _pick_column(df, ("wait", "hour", "resolve", "median", "mean", "average"), numeric=True))
     if label is None or value is None:
         return [f"Waiting times for {len(df)} area{'s' if len(df) != 1 else ''} are in governance/area_fairness.csv "
                 "(see the chart in the dashboard)."]
@@ -154,7 +155,14 @@ def fairness_findings(df: pd.DataFrame | None) -> list[str]:
             f"and shortest in {low[label]} ({low[value]:.1f})")
     if low[value] > 0:
         text += f", so the longest wait is {high[value] / low[value]:.1f} times the shortest"
-    return [text + "."]
+    findings = [text + "."]
+    rule = next((c for c in df.columns if "break" in str(c).lower()), None)
+    if rule is not None:
+        broken = [str(w) for w, flag in zip(df[label], df[rule])
+                  if str(flag).strip().lower() in ("true", "yes", "y", "1")]
+        findings.append("Areas that break our fairness rule: " + ", ".join(broken) + "." if broken
+                        else "No area breaks our fairness rule.")
+    return findings
 
 
 def language_findings(df: pd.DataFrame | None) -> list[str]:
@@ -162,7 +170,8 @@ def language_findings(df: pd.DataFrame | None) -> list[str]:
     if df is None or df.empty:
         return ["Language results have not been added yet (governance/bias_results_after.csv)."]
     label = _pick_column(df, ("language", "lang"), numeric=False) or _first_text_column(df)
-    value = _pick_column(df, ("accuracy", "correct"), numeric=True)
+    value = (_pick_column(df, ("category",), numeric=True)
+             or _pick_column(df, ("accuracy", "correct"), numeric=True))
     if label is None or value is None:
         return [f"Classifier results for {len(df)} languages are in "
                 "governance/bias_results_after.csv."]
