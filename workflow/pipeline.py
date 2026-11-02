@@ -264,12 +264,22 @@ def _print_summary(summary: dict) -> None:
           f"{len(summary['invalid'])} skipped (missing reference or description)")
 
 
+def _shown(path: Path) -> str:
+    """A path relative to the project if it's inside it, else as it is."""
+    path = Path(path).resolve()
+    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Report Radar workflow: process new reports.")
     parser.add_argument("--inbox", type=Path, help="CSV of new reports to process")
     parser.add_argument("--check-overdue", action="store_true",
                         help="escalate tickets past their deadline and email the supervisor")
+    parser.add_argument("--demo", action="store_true",
+                        help="send the 10 made-up example reports through (safe to repeat)")
     args = parser.parse_args(argv)
+    if args.demo:
+        args.inbox, args.check_overdue = INBOX_EXAMPLE, True
     if not (args.inbox or args.check_overdue):
         parser.print_help()
         return 0
@@ -281,7 +291,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  escalated {ticket['ticket_id']} ({ticket['assigned_team']}, {ticket['ward']}), "
                   f"was due {ticket['due_by']}")
         print(f"{len(escalated)} overdue ticket(s) escalated")
-    print(f"Tickets: {TICKETS_FILE.relative_to(ROOT)}")
+    if args.demo:
+        tickets = load_tickets()
+        waiting = sum(t["approval_status"] == "pending" for t in tickets)
+        print(f"Demo: {len(tickets)} tickets saved, {waiting} waiting for a supervisor. "
+              "Open the dashboard's Workflow tab to see them.")
+        print(f"Emails (not sent, saved only): {_shown(fallbacks.OUTBOX_DIR)}")
+    print(f"Tickets: {_shown(TICKETS_FILE)}")
     return 0
 
 

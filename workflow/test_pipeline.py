@@ -112,9 +112,9 @@ def test_inbox_is_processed_once_even_if_run_twice(flow, tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "PROCESSED_FILE", tmp_path / "processed.csv")
     first = pipeline.process_inbox(pipeline.INBOX_EXAMPLE, now=NOW)
     second = pipeline.process_inbox(pipeline.INBOX_EXAMPLE, now=NOW)
-    assert len(first["new"]) == 5 and first["skipped"] == []
-    assert second["new"] == [] and len(second["skipped"]) == 5
-    assert [t["ticket_id"] for t in pipeline.load_tickets()] == [f"TKT-00000{i}" for i in range(1, 6)]
+    assert len(first["new"]) == 10 and first["skipped"] == []
+    assert second["new"] == [] and len(second["skipped"]) == 10
+    assert [t["ticket_id"] for t in pipeline.load_tickets()] == [f"TKT-{i:06d}" for i in range(1, 11)]
 
 
 def test_inbox_rows_without_a_description_are_skipped(flow, tmp_path, monkeypatch):
@@ -135,3 +135,11 @@ def test_overdue_tickets_are_escalated_and_the_supervisor_emailed(flow):
     assert saved == {"TKT-000001": "escalated", "TKT-000002": "awaiting_approval"}
     assert "TKT-000001-overdue.eml" in emails(flow["outbox"])
     assert pipeline.check_overdue(now=nine_days_later) == []  # already escalated: nothing new
+
+
+def test_demo_runs_and_can_be_repeated(flow, tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(pipeline, "PROCESSED_FILE", tmp_path / "processed.csv")
+    assert pipeline.main(["--demo"]) == 0
+    assert pipeline.main(["--demo"]) == 0
+    assert len(pipeline.load_tickets()) == 10
+    assert "0 new, 10 already processed" in capsys.readouterr().out

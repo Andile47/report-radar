@@ -9,6 +9,7 @@ Steps (stops at the first one that fails):
   3. intake/evaluate.py              test the classifier on 30 tricky reports
   4. forecast/forecast.py            weekly forecast, workload table, chart
   5. hotspots/hotspot_analysis.py    clusters, ranked list, map
+  6. workflow/pipeline.py --demo     10 example reports through the Week 7 workflow
 """
 import subprocess
 import sys
@@ -22,6 +23,7 @@ STEPS = [
     ("Test the classifier", "intake/evaluate.py"),
     ("Forecast", "forecast/forecast.py"),
     ("Hotspots", "hotspots/hotspot_analysis.py"),
+    ("Workflow demo", "workflow/pipeline.py --demo"),
 ]
 
 
@@ -29,7 +31,8 @@ def main() -> int:
     for number, (name, script) in enumerate(STEPS, start=1):
         print(f"\n=== {number}/{len(STEPS)} {name} ({script}) ===", flush=True)
         start = time.time()
-        result = subprocess.run([sys.executable, str(ROOT / script)], cwd=ROOT)
+        path, *args = script.split()
+        result = subprocess.run([sys.executable, str(ROOT / path), *args], cwd=ROOT)
         if result.returncode != 0:
             print(f"\nStopped: {script} failed. Fix it and run again.")
             return result.returncode
