@@ -5,3 +5,10 @@ __pycache__/
 # Week 6 decision log: generated on every run, kept out of git (example kept)
 governance/logs/*
 !governance/logs/decisions_example.csv
+
+# Week 7 workflow: live tickets and sent emails stay on each machine (examples kept)
+workflow/data/*
+!workflow/data/tickets_example.csv
+!workflow/data/.gitkeep
+workflow/outbox/*
+!workflow/outbox/.gitkeep
