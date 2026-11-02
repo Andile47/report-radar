@@ -46,6 +46,7 @@ RULES_VERSION = {
     "forecast": "forecast-2026.10",
     "hotspots": "hotspots-2026.10",
     "workflow": "workflow-2026.11",
+    "approvals": "approvals-2026.11",
 }
 
 
