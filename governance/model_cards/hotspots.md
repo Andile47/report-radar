@@ -1,6 +1,6 @@
 # Model card: Problem areas (hotspots)
 
-*Report Radar · Week 6 · last reviewed 27 Oct 2026 · rules version `hotspots-2026.10`*
+*Report Radar · Week 6 · last reviewed 2 Nov 2026 · rules version `hotspots-2026.10`*
 
 ## What it is for
 
@@ -43,7 +43,7 @@ Water is the most common problem in every area, and average urgency is about the
 
 ## How decisions are recorded
 
-The ranked list is saved to `hotspots/clusters.csv` on every run. Hotspot runs are not yet written to the decision log; that is a next step.
+Every run adds one row to the decision log (`governance/logs/decisions.csv`) with the ranking, the number of areas and why it was chosen. The ranked list is also saved to `hotspots/clusters.csv`. The area fairness analysis (`governance/area_fairness.md`) checks whether quieter areas wait longer.
 
 ## Who to contact
 

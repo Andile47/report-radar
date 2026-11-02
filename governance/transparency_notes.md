@@ -16,8 +16,8 @@ Short notes for each dashboard tab, written for managers without a technical bac
 
 ## Reports
 
-**How this was decided:** each report's problem type and urgency (1 to 5) are chosen automatically from the words the resident used, and the "Why" column shows those words. It works well on common wording, but it got 4 of 30 deliberately tricky reports wrong. It understands only English and a few isiZulu phrases, so reports in other languages may be marked unclear or given low urgency. Treat the urgency as a first sort, and check anything that looks wrong; reports it can't sort are marked for a person to check.
+**How this was decided:** each report's problem type and urgency (1 to 5) are chosen automatically from the words the resident used, and the "Why" column shows those words. It works well on common wording, but it got 4 of 30 deliberately tricky reports wrong. It now recognises common phrases in isiZulu, Sesotho, Sepedi, Xitsonga and Afrikaans, but other wordings and languages may still be marked unclear or given a lower urgency than the same problem written in English. Treat the urgency as a first sort, and check anything that looks wrong; reports it can't sort are marked for a person to check.
 
 ## Every decision is recorded
 
-Each sorted report and each forecast run is written to a decision log (`governance/logs/decisions.csv`): what was decided, when, why, and with which version of the rules. Personal details such as phone and ID numbers are hidden before anything is written. This lets anyone check or challenge a decision later.
+Each sorted report, each forecast run and each problem-areas run is written to a decision log (`governance/logs/decisions.csv`): what was decided, when, why, and with which version of the rules. Personal details such as names, phone and ID numbers are hidden before anything is written, and rows are deleted after 12 months. This lets anyone check or challenge a decision later.
