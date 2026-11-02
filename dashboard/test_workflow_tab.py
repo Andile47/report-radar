@@ -54,8 +54,21 @@ def test_email_addresses_are_hidden_from_display_text():
     )
 
 
-def test_empty_pipeline_module_has_a_friendly_not_ready_message():
+def test_empty_pipeline_module_has_a_friendly_not_ready_message(monkeypatch):
+    import workflow_tab
+    # Simulate workflow/pipeline.py without load_tickets (as before the pipeline was built)
+    monkeypatch.setattr(workflow_tab, "_optional_function", lambda module, name: None)
     tickets, message = _load_tickets()
 
     assert tickets is None
     assert "ticket-loading step is still being added" in message
+
+
+def test_real_pipeline_tickets_are_loaded(tmp_path, monkeypatch):
+    from workflow import pipeline
+    monkeypatch.setattr(pipeline, "TICKETS_FILE", tmp_path / "tickets.csv")
+    pipeline.save_ticket({"ticket_id": "TKT-000001", "assigned_team": "Water", "status": "assigned"})
+    tickets, message = _load_tickets()
+
+    assert message is None
+    assert [t["ticket_id"] for t in tickets] == ["TKT-000001"]

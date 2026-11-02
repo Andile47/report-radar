@@ -45,6 +45,7 @@ RULES_VERSION = {
     "classifier": "classifier-2026.10",
     "forecast": "forecast-2026.10",
     "hotspots": "hotspots-2026.10",
+    "workflow": "workflow-2026.11",
 }
 
 
