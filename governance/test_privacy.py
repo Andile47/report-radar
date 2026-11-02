@@ -42,3 +42,19 @@ def test_masks_house_numbers_written_without_a_street():
 def test_counts_and_durations_are_not_mistaken_for_house_numbers():
     text = "No water for 3 days, 12 houses affected, no 2nd supply"
     assert mask_personal_info(text) == text
+
+
+def test_masks_phone_numbers_in_other_groupings():
+    for phone in ("(082) 123 4567", "082 1234 567", "082-123-4567", "0821234567",
+                  "+27 (0)82 123 4567", "0027 82 123 4567", "011 234 5678"):
+        assert mask_personal_info(f"Call {phone} today") == "Call [PHONE] today", phone
+
+
+def test_masks_id_numbers_written_in_groups():
+    for id_number in ("900101 5009 087", "900101-5009-087", "9001015009087"):
+        assert mask_personal_info(f"ID {id_number} reported it") == "ID [ID] reported it", id_number
+
+
+def test_times_dates_and_counts_are_not_mistaken_for_phone_or_id_numbers():
+    text = "Outage from 0800-1700 on 2026-11-02, 120 homes, meter 4567 1234"
+    assert mask_personal_info(text) == text
