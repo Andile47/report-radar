@@ -44,7 +44,7 @@ def test_fixed_per_week_counts_by_week_fixed():
     starts = pd.date_range("2026-01-05", periods=4, freq="7D")
     stamps = [d + pd.Timedelta(days=k) for d in starts for k in range(3)]
     df = pd.DataFrame({"timestamp": stamps, "status": "resolved", "hours_to_resolve": 1.0})
-    open_rows = pd.DataFrame({"timestamp": stamps[:2], "status": "open", "hours_to_resolve": [None, None]})
+    open_rows = pd.DataFrame({"timestamp": stamps[:2], "status": "open", "hours_to_resolve": [float("nan"), float("nan")]})
     df = pd.concat([df, open_rows], ignore_index=True)
     whole, last8 = fixed_per_week(df)
     assert whole == 3.0
