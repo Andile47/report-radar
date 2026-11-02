@@ -123,3 +123,15 @@ def test_inbox_rows_without_a_description_are_skipped(flow, tmp_path, monkeypatc
     inbox.write_text("report_ref,description,ward,resident_email\nA1,,Tsutsumani,\nA2,Pothole,East Bank,\n")
     summary = pipeline.process_inbox(inbox, now=NOW)
     assert summary["invalid"] == ["line 2"] and len(summary["new"]) == 1
+
+
+def test_overdue_tickets_are_escalated_and_the_supervisor_emailed(flow):
+    late = pipeline.process_report("Speed hump broken and sticking out", "Tsutsumani", now=NOW)
+    pipeline.process_report("Live wires hanging low across the road", "East Bank", now=NOW)  # waits for approval
+    nine_days_later = "2026-11-12T08:00:00+02:00"  # urgency 2 has 7 days
+    escalated = pipeline.check_overdue(now=nine_days_later)
+    assert [t["ticket_id"] for t in escalated] == [late["ticket_id"]]
+    saved = {t["ticket_id"]: t["status"] for t in pipeline.load_tickets()}
+    assert saved == {"TKT-000001": "escalated", "TKT-000002": "awaiting_approval"}
+    assert "TKT-000001-overdue.eml" in emails(flow["outbox"])
+    assert pipeline.check_overdue(now=nine_days_later) == []  # already escalated: nothing new

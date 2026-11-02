@@ -190,6 +190,27 @@ def _park_failed(ticket: dict, stage: str, error: Exception, when: str) -> dict:
     return ticket
 
 
+# ---------- overdue tickets ----------
+def check_overdue(now=None) -> list[dict]:
+    """Escalate every open ticket that is past its deadline, save it, email
+    the supervisor and log it. Returns the escalated tickets."""
+    when = now_iso(now)
+    escalate, fake = step("approvals", "escalate_overdue")
+    notify, _ = step("notify", "notify")
+    changed = escalate(load_tickets(), when)
+    for ticket in changed:
+        save_ticket(ticket)
+        try:
+            notify("overdue", ticket, now=when)
+        except Exception as error:  # the escalation is saved even if the email fails
+            _log(ticket["ticket_id"], ticket.get("description_masked", ""), "overdue email failed",
+                 type(error).__name__)
+        _log(ticket["ticket_id"], ticket.get("description_masked", ""),
+             f"status=escalated; was due_by={ticket.get('due_by')}",
+             "past its deadline" + ("; stand-in used: approvals" if fake else ""))
+    return changed
+
+
 # ---------- automation: process an inbox file ----------
 def _processed_refs(path: Path | None = None) -> dict[str, str]:
     path = Path(path or PROCESSED_FILE)
@@ -246,12 +267,20 @@ def _print_summary(summary: dict) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Report Radar workflow: process new reports.")
     parser.add_argument("--inbox", type=Path, help="CSV of new reports to process")
+    parser.add_argument("--check-overdue", action="store_true",
+                        help="escalate tickets past their deadline and email the supervisor")
     args = parser.parse_args(argv)
-    if not args.inbox:
+    if not (args.inbox or args.check_overdue):
         parser.print_help()
         return 0
-    summary = process_inbox(args.inbox)
-    _print_summary(summary)
+    if args.inbox:
+        _print_summary(process_inbox(args.inbox))
+    if args.check_overdue:
+        escalated = check_overdue()
+        for ticket in escalated:
+            print(f"  escalated {ticket['ticket_id']} ({ticket['assigned_team']}, {ticket['ward']}), "
+                  f"was due {ticket['due_by']}")
+        print(f"{len(escalated)} overdue ticket(s) escalated")
     print(f"Tickets: {TICKETS_FILE.relative_to(ROOT)}")
     return 0
 
