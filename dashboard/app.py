@@ -18,12 +18,18 @@ from __future__ import annotations
 
 import html
 import json
+import sys
 from pathlib import Path
 
 import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+
+# Let the tabs import project folders such as workflow/ (Week 7), however the app is started.
+_PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 
 # Optional features built by teammates: shown only if the file exists.
 try:
