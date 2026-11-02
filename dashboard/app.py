@@ -38,6 +38,10 @@ try:
     from risk_tab import show_risk_tab
 except ImportError:
     show_risk_tab = None
+try:
+    from workflow_tab import show_workflow_tab
+except ImportError:
+    show_workflow_tab = None
 
 ROOT = Path(__file__).resolve().parent.parent
 ROOT = Path(__file__).resolve().parent.parent
@@ -311,8 +315,8 @@ if missing:
     st.warning("Some parts show EXAMPLE data because the real files aren't built yet: "
                + ", ".join(missing) + ". Run `python run_all.py` to build them.")
 
-tab_o, tab_f, tab_h, tab_r, tab_k = st.tabs(["Overview", "Forecast", "Problem areas", "Reports",
-                                             "Risk & compliance"])
+tab_o, tab_f, tab_h, tab_r, tab_k, tab_w = st.tabs(["Overview", "Forecast", "Problem areas", "Reports",
+                                                     "Risk & compliance", "Workflow"])
 
 # =====================================================================
 # OVERVIEW
@@ -612,4 +616,13 @@ with tab_k:
         show_risk_tab()
     else:
         st.info("The risk and compliance tab isn't available yet: dashboard/risk_tab.py is missing.")
+
+# =====================================================================
+# WORKFLOW
+# =====================================================================
+with tab_w:
+    if show_workflow_tab is not None:
+        show_workflow_tab()
+    else:
+        st.info("The workflow tab isn't available yet: dashboard/workflow_tab.py is missing.")
         

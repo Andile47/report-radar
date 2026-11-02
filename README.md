@@ -27,7 +27,7 @@ streamlit run dashboard/app.py    # opens the dashboard in your browser
 
 `run_all.py` checks the data, classifies the reports, tests the classifier, builds the forecast and finds the hotspots, in that order. The dashboard also runs without it, showing labelled placeholder data for any part that hasn't been built.
 
-To run the tests: `pytest forecast intake dashboard governance`
+To run the tests: `python -m pytest forecast intake dashboard governance workflow`
 
 ## What the dashboard shows
 
@@ -40,6 +40,7 @@ The dashboard is written for readers without a technical background: it opens wi
 - **Problem areas tab:** a bar chart and table ranking the areas from busiest to quietest, what that means, and an interactive map (the map needs an internet connection).
 - **Reports tab:** opens on urgent reports that are not fixed yet, most urgent first, with plain column names. You can switch to reports that need checking by a person, or all reports, and show why the system chose each problem type and urgency.
 - **Risk & compliance tab:** every risk the team found, highest first, with who it could harm and what we did; whether some areas wait longer; how well the classifier works in each language; the latest decisions the system made and why; and a button to download the risk evaluation report.
+- **Workflow tab:** residents can submit a report and see its ticket number, assigned team, and expected fix date; team members can sort their open queue by urgency and deadline; supervisors can approve, reassign, or reject reports; sent update emails can be opened from the outbox. Resident email addresses are not shown elsewhere on the dashboard. Each section explains when its workflow file is not ready yet.
 - **Filters (left):** type of problem, area, minimum urgency and a search of what residents wrote. They change the headline numbers and the Reports tab; the forecast and problem areas always use every report.
 - **How to read this page:** each tab has a short guide that opens with one click.
 
@@ -85,6 +86,8 @@ The agreed columns, used by every module:
 
 - [`docs/one_page_explanation.md`](docs/one_page_explanation.md): what Report Radar found, for non-technical readers
 - [`docs/demo_script.md`](docs/demo_script.md): the 5-minute demo, who presents what
+- [`docs/week7_user_guide.md`](docs/week7_user_guide.md): the Workflow steps for residents, team members, and supervisors
+- [`docs/week7_demo_script.md`](docs/week7_demo_script.md): a five-minute report-to-approval walkthrough
 - [`docs/prompt_log.md`](docs/prompt_log.md): the AI prompts used, for the responsible-AI part of the rubric
 - [`docs/week6_risk_report.md`](docs/week6_risk_report.md): the Week 6 risk evaluation report, with our ethical reasoning
 - [`docs/week6_demo_script.md`](docs/week6_demo_script.md): the Week 6 demo, who presents which risk, and the ethics discussion
@@ -106,6 +109,10 @@ All files are in `governance/` unless a folder is shown.
 - **Decision log:** created when you run `python run_all.py` and not committed; `governance/logs/decisions_example.csv` shows the format. Personal details are masked before writing, and rows older than 365 days are deleted automatically. To switch logging off, set `REPORT_RADAR_LOGGING=off`; to change how long rows are kept, set `REPORT_RADAR_LOG_RETENTION_DAYS`.
 - **Risk register:** everyone adds rows at the end of `governance/risk_register.csv` in the same format; `pytest governance` checks it (unique IDs, ratings 1-5, score = likelihood × impact).
 - **Before any real resident data is used:** mask report text on the dashboard, add a login, give residents a way to see and correct their reports, and have fluent speakers check every translated phrase. See the risk report's next steps.
+
+## Workflow (Week 7)
+
+The `workflow/` folder contains the agreed ticket columns and the report, approval, and email module handoffs. Tickets are saved in `workflow/data/tickets.csv`; sent messages are saved as `.eml` files in `workflow/outbox/`. The `workflow/README.md` records the team checkpoints and commit-identity checklist. Run all tests with `python -m pytest forecast intake dashboard governance workflow`.
 
 ## Optional: the LLM classifier
 
