@@ -25,7 +25,7 @@ python run_all.py                 # builds every output, about 20 seconds
 streamlit run dashboard/app.py    # opens the dashboard in your browser
 ```
 
-`run_all.py` checks the data, classifies the reports, tests the classifier, builds the forecast and finds the hotspots, in that order. The dashboard also runs without it, showing labelled placeholder data for any part that hasn't been built.
+`run_all.py` checks the data, classifies the reports, tests the classifier, builds the forecast, finds the hotspots and sends 10 example reports through the Week 7 workflow, in that order. The dashboard also runs without it, showing labelled placeholder data for any part that hasn't been built.
 
 To run the tests: `python -m pytest forecast intake dashboard governance workflow`
 
@@ -113,6 +113,16 @@ All files are in `governance/` unless a folder is shown.
 ## Workflow (Week 7)
 
 The `workflow/` folder contains the agreed ticket columns and the report, approval, and email module handoffs. Tickets are saved in `workflow/data/tickets.csv`; sent messages are saved as `.eml` files in `workflow/outbox/`. The `workflow/README.md` records the team checkpoints and commit-identity checklist. Run all tests with `python -m pytest forecast intake dashboard governance workflow`.
+
+Every new report runs through one automated pipeline (`workflow/pipeline.py`): mask personal details, classify, route to a team with a deadline, wait for a supervisor if urgent or unclear, save the ticket, email the right people, and log the decision. If a step fails, the ticket is still saved to the supervisor's approval queue. Commands:
+
+```bash
+python workflow/pipeline.py --demo            # 10 example reports (safe to repeat)
+python workflow/pipeline.py --inbox new.csv   # process new reports; never creates duplicates
+python workflow/pipeline.py --check-overdue   # escalate tickets past their deadline
+```
+
+Live tickets, the inbox and sent emails stay on each computer and are not committed. See `workflow/README.md` for how teammates' modules plug in, and `governance/model_cards/workflow.md` for what is automated and what still needs a person.
 
 ## Optional: the LLM classifier
 
