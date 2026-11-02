@@ -35,7 +35,7 @@ Keyword rules cannot cover every spelling, dialect, typo, synonym, code-switch, 
 ## Human Review
 
 - A result with category `other` has `review_required: true` and should be checked by a person.
-- Ask a fluent speaker to verify every `CHECK-` test description before treating it as an approved translation or expanding production use.
+- Ask a fluent speaker to verify every `CHECK-` test description before treating it as an approved translation or expanding production use. Reviewers fill in `governance/translation_review.csv` (it holds AI pre-check notes, with 16 rows flagged as most likely to need a fix), then run `python governance/apply_translation_review.py` and `python governance/bias_check.py`. Approved rows lose the `CHECK-` prefix and the results above are re-measured on the checked wording.
 - Have a person check reports with unfamiliar wording, mixed languages, conflicting problems, or a potentially dangerous situation whose urgency seems understated, even if a category was assigned. `review_required` is currently based on category `other`; a low or incorrect urgency by itself does not trigger it.
 - Keep a human escalation path for urgent safety decisions. Do not use the keyword score as a substitute for assessing the resident's situation.
 
