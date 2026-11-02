@@ -11,6 +11,9 @@ A record of how AI tools were used on Report Radar, as asked for in the responsi
 | 23 Oct 2026 | Dikeledi | Claude | Check the whole project against the five-role guide and list what is missing | Found gaps in data, intake, dashboard and docs |
 | 23 Oct 2026 | Dikeledi | Claude | Implement everything missing, one commit per role | Data generator, sample and checks; classifier rebuilt with tests and an LLM version; cluster-count check and map insights; dashboard integration, README, this log, one-pager and demo script |
 | 27 Oct 2026 | Dikeledi | Claude | Week 6, Role 4 (Logging and Transparency Lead): build a decision log, connect it to the classifier and forecast without changing outputs, and write model cards, transparency notes and risk register rows | Checked that every output file is identical with logging on and off (fingerprint comparison), that personal details are masked in the log, and that all tests pass. Every figure in the model cards was checked against the real outputs. |
+| 2 Nov 2026 | Thembelihle | Claude | Week 6, Role 3 (Privacy and Data Governance Lead): write a script that scans report descriptions for phone numbers, ID numbers, emails, house numbers and names | Ran it on the synthetic `data/reports.csv` only. It found 0 matches in 3,994 reports. This shows the data is clean, not that real data would be, so the risk went in the register. |
+| 2 Nov 2026 | Thembelihle | Claude | Write `mask_personal_info(text)` with made-up pytest examples | Ran the tests (all passed). The first version used `[ID_NUMBER]`, which failed Dikeledi's logger test, so we changed it to `[ID]`. Only made-up examples were used, and no real personal data was pasted into the AI tool. |
+| 2 Nov 2026 | Thembelihle | Claude | Draft the data card, 4 privacy risk rows and the POPIA checklist | Checked each status against the repo (e.g. the LLM classifier falls back to keywords without an API key). Marked retention limits and residents' right to see and correct reports as Not met, instead of claiming they were solved. |
 
 ## What we checked ourselves
 
@@ -22,6 +25,7 @@ AI can sound confident and still be wrong, so these were checked by running the 
 - **Hotspots:** the AI's first insight text described East Bank as "in the west of Alexandra" and named the same area as both most urgent and quietest. Both were wrong or misleading and were rewritten; urgency differences of 3.0 to 3.1 are now reported as "similar everywhere".
 - **Hotspot map:** it originally opened on central Johannesburg, about 10 km from the data; it is now centred on Alexandra.
 - **Dashboard:** run in a browser and checked tab by tab.
+- **Privacy masking:** tested with made-up examples only, and all governance tests pass. It is pattern-based, so it can miss unusual formats or names without a title. We recorded this as a risk (R3-02) and did not claim it was solved.
 
 ## Prompts for teammates to add
 
