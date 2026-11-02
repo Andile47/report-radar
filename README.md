@@ -6,7 +6,10 @@
 
 Report Radar helps a municipality see **when** citizen reports are likely to surge and **where** problems are concentrated. Citizens report issues such as burst pipes, potholes and load-shedding faults. Report Radar sorts each report by type and urgency, forecasts the next month's workload, and maps the hotspots, so teams can plan before the surge arrives.
 
-**Week 5 focus:** predictive insights (forecast and hotspots) on a dashboard. All data is synthetic: no real personal information is used.
+**Week 5:** predictive insights (forecast and hotspots) on a dashboard.
+**Week 6:** an AI risk and compliance layer: bias and fairness checks, privacy masking, a decision log, transparency notes and a risk report.
+
+All data is synthetic: no real personal information is used.
 
 ## How to run
 
@@ -36,6 +39,7 @@ The dashboard is written for readers without a technical background: it opens wi
 - **Capacity planner (bottom of the Workload forecast tab):** enter the number of crews and how many reports one crew fixes in a week, and it says whether next month is covered, how far behind unfixed reports will fall if not, and how many crews you need.
 - **Problem areas tab:** a bar chart and table ranking the areas from busiest to quietest, what that means, and an interactive map (the map needs an internet connection).
 - **Reports tab:** opens on urgent reports that are not fixed yet, most urgent first, with plain column names. You can switch to reports that need checking by a person, or all reports, and show why the system chose each problem type and urgency.
+- **Risk & compliance tab:** every risk the team found, highest first, with who it could harm and what we did; whether some areas wait longer; how well the classifier works in each language; the latest decisions the system made and why; and a button to download the risk evaluation report.
 - **Filters (left):** type of problem, area, minimum urgency and a search of what residents wrote. They change the headline numbers and the Reports tab; the forecast and problem areas always use every report.
 - **How to read this page:** each tab has a short guide that opens with one click.
 
@@ -82,16 +86,27 @@ The agreed columns, used by every module:
 - [`docs/one_page_explanation.md`](docs/one_page_explanation.md): what Report Radar found, for non-technical readers
 - [`docs/demo_script.md`](docs/demo_script.md): the 5-minute demo, who presents what
 - [`docs/prompt_log.md`](docs/prompt_log.md): the AI prompts used, for the responsible-AI part of the rubric
+- [`docs/week6_risk_report.md`](docs/week6_risk_report.md): the Week 6 risk evaluation report, with our ethical reasoning
+- [`docs/week6_demo_script.md`](docs/week6_demo_script.md): the Week 6 demo, who presents which risk, and the ethics discussion
 
 ## Governance (Week 6)
 
 The `governance/` folder holds the risk and compliance work:
 
-- **Decision log:** every sorted report and every forecast run is recorded in `governance/logs/decisions.csv` (what was decided, when, why, and with which rules version). Personal details are hidden first. The log is created when you run `python run_all.py` and is not committed; `decisions_example.csv` shows the format. To switch it off, set `REPORT_RADAR_LOGGING=off`.
-- **Model cards:** one page each on what the forecast, classifier and hotspots do, how accurate they are and their limits (`governance/model_cards/`).
-- **Transparency notes:** a short "How this was decided" note for each dashboard tab (`governance/transparency_notes.md`).
-- **Risk register:** every risk the team found, scored and assigned (`governance/risk_register.csv`).
+| What | Files | Owner |
+| --- | --- | --- |
+| **Classifier bias:** the same problems in six South African languages plus vulnerable residents, accuracy before and after | `bias_test_reports.csv`, `bias_check.py`, `bias_results_*.csv`, `classifier_bias.md` | Role 1: petroblyn |
+| **Area fairness:** waiting times by area, a 1.5× fairness rule, the hotspot feedback loop | `area_fairness.py`, `area_fairness.csv`, `area_fairness.png`, `area_fairness.md` | Role 2: Tshepo Tleane |
+| **Privacy (POPIA):** masking of names, phone, ID and house numbers and emails; data card; POPIA checklist | `privacy.py`, `scan_pii.py`, `data_card.md`, `popia_checklist.md` | Role 3: Thembelihle |
+| **Decision log and transparency:** every sorted report, forecast and hotspot run recorded with its reason; model cards; "How this was decided" notes | `logger.py`, `logs/`, `model_cards/`, `transparency_notes.md` | Role 4: Dikeledi |
+| **Risk register and report:** every risk scored and assigned; the Risk & compliance tab | `risk_register.csv`, `dashboard/risk_tab.py`, `docs/week6_risk_report.md` | Role 5: Andile Khoza |
+
+All files are in `governance/` unless a folder is shown.
+
+- **Decision log:** created when you run `python run_all.py` and not committed; `governance/logs/decisions_example.csv` shows the format. Personal details are masked before writing, and rows older than 365 days are deleted automatically. To switch logging off, set `REPORT_RADAR_LOGGING=off`; to change how long rows are kept, set `REPORT_RADAR_LOG_RETENTION_DAYS`.
+- **Risk register:** everyone adds rows at the end of `governance/risk_register.csv` in the same format; `pytest governance` checks it (unique IDs, ratings 1-5, score = likelihood × impact).
+- **Before any real resident data is used:** mask report text on the dashboard, add a login, give residents a way to see and correct their reports, and have fluent speakers check every translated phrase. See the risk report's next steps.
 
 ## Optional: the LLM classifier
 
-`intake/llm_classifier.py` can classify reports with Claude instead of keywords. It needs `pip install anthropic` and an `ANTHROPIC_API_KEY`. Without them, everything else still works and the keyword classifier is used.
+`intake/llm_classifier.py` can classify reports with Claude instead of keywords. It needs `pip install anthropic` and an `ANTHROPIC_API_KEY`. Without them, everything else still works and the keyword classifier is used. Personal details are masked before any text is sent, and nothing is sent if the masking module is missing.
