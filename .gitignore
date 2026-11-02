@@ -12,3 +12,5 @@ workflow/data/*
 !workflow/data/.gitkeep
 workflow/outbox/*
 !workflow/outbox/.gitkeep
+workflow/inbox/*
+!workflow/inbox/new_reports_example.csv

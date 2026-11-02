@@ -106,3 +106,20 @@ def test_a_failed_step_still_saves_the_ticket_for_the_supervisor(flow, monkeypat
     assert pipeline.load_tickets()[0]["ticket_id"] == "TKT-000001"
     assert emails(flow["outbox"]) == ["TKT-000001-approval_needed.eml"]
     assert "route step failed: KeyError" in flow["log"].read_text()
+
+
+def test_inbox_is_processed_once_even_if_run_twice(flow, tmp_path, monkeypatch):
+    monkeypatch.setattr(pipeline, "PROCESSED_FILE", tmp_path / "processed.csv")
+    first = pipeline.process_inbox(pipeline.INBOX_EXAMPLE, now=NOW)
+    second = pipeline.process_inbox(pipeline.INBOX_EXAMPLE, now=NOW)
+    assert len(first["new"]) == 5 and first["skipped"] == []
+    assert second["new"] == [] and len(second["skipped"]) == 5
+    assert [t["ticket_id"] for t in pipeline.load_tickets()] == [f"TKT-00000{i}" for i in range(1, 6)]
+
+
+def test_inbox_rows_without_a_description_are_skipped(flow, tmp_path, monkeypatch):
+    monkeypatch.setattr(pipeline, "PROCESSED_FILE", tmp_path / "processed.csv")
+    inbox = tmp_path / "inbox.csv"
+    inbox.write_text("report_ref,description,ward,resident_email\nA1,,Tsutsumani,\nA2,Pothole,East Bank,\n")
+    summary = pipeline.process_inbox(inbox, now=NOW)
+    assert summary["invalid"] == ["line 2"] and len(summary["new"]) == 1

@@ -26,6 +26,7 @@ saved in the ticket, the CSV or the decision log.
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import importlib
 import re
@@ -49,6 +50,8 @@ except ImportError:
 
 DATA_DIR = ROOT / "workflow" / "data"
 TICKETS_FILE = DATA_DIR / "tickets.csv"
+PROCESSED_FILE = DATA_DIR / "processed_inbox.csv"  # report_ref -> ticket_id, so nothing runs twice
+INBOX_EXAMPLE = ROOT / "workflow" / "inbox" / "new_reports_example.csv"
 
 # The shared ticket, agreed by the team on day 1. Don't change the order.
 COLUMNS = [
@@ -185,3 +188,73 @@ def _park_failed(ticket: dict, stage: str, error: Exception, when: str) -> dict:
     except Exception:  # the ticket is saved and logged even if the email fails
         pass
     return ticket
+
+
+# ---------- automation: process an inbox file ----------
+def _processed_refs(path: Path | None = None) -> dict[str, str]:
+    path = Path(path or PROCESSED_FILE)
+    if not path.exists():
+        return {}
+    with path.open(newline="", encoding="utf-8") as handle:
+        return {row["report_ref"]: row["ticket_id"] for row in csv.DictReader(handle)}
+
+
+def _remember(report_ref: str, ticket_id: str, when: str, path: Path | None = None) -> None:
+    path = Path(path or PROCESSED_FILE)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    new_file = not path.exists()
+    with path.open("a", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        if new_file:
+            writer.writerow(["report_ref", "ticket_id", "processed_at"])
+        writer.writerow([report_ref, ticket_id, when])
+
+
+def process_inbox(inbox: Path, now=None) -> dict:
+    """Process every row of an inbox CSV (report_ref, description, ward,
+    resident_email). Rows already processed are skipped, so this is safe to
+    run again and again, e.g. every 15 minutes on a schedule."""
+    done = _processed_refs()
+    summary = {"new": [], "skipped": [], "invalid": []}
+    with Path(inbox).open(newline="", encoding="utf-8-sig") as handle:
+        rows = list(csv.DictReader(handle))
+    for number, row in enumerate(rows, start=2):  # line 1 is the header
+        ref = (row.get("report_ref") or "").strip()
+        text = (row.get("description") or "").strip()
+        if not ref or not text:
+            summary["invalid"].append(f"line {number}")
+            continue
+        if ref in done:
+            summary["skipped"].append(ref)
+            continue
+        email = (row.get("resident_email") or "").strip() or None
+        ticket = process_report(text, (row.get("ward") or "").strip(), resident_email=email, now=now)
+        _remember(ref, ticket["ticket_id"], ticket["received_at"])
+        done[ref] = ticket["ticket_id"]
+        summary["new"].append(ticket)
+    return summary
+
+
+def _print_summary(summary: dict) -> None:
+    for ticket in summary["new"]:
+        print(f"  {ticket['ticket_id']}  {ticket['ward'] or '-':<14} {ticket['category']:<13} "
+              f"urgency {ticket['urgency']}  -> {ticket['assigned_team']:<12} {ticket['status']}")
+    print(f"{len(summary['new'])} new, {len(summary['skipped'])} already processed, "
+          f"{len(summary['invalid'])} skipped (missing reference or description)")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Report Radar workflow: process new reports.")
+    parser.add_argument("--inbox", type=Path, help="CSV of new reports to process")
+    args = parser.parse_args(argv)
+    if not args.inbox:
+        parser.print_help()
+        return 0
+    summary = process_inbox(args.inbox)
+    _print_summary(summary)
+    print(f"Tickets: {TICKETS_FILE.relative_to(ROOT)}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
