@@ -18,6 +18,10 @@ By default it calls Claude through the Anthropic API, which needs:
 To use another LLM, pass your own `ask` function that takes the prompt text
 and returns the model's reply text.
 
+Privacy (POPIA): phone numbers, ID numbers, emails, house numbers and names
+are masked with governance/privacy.py before the text is sent. If the
+masking module can't be loaded, nothing is sent.
+
 If the model is unavailable or replies with something that isn't valid
 JSON, the report falls back to the keyword classifier, so intake never
 stops working. The result's "source" says which one was used.
@@ -29,7 +33,12 @@ import os
 import re
 from typing import Callable
 
-from classifier import CATEGORIES, process_report
+from classifier import CATEGORIES, process_report  # also puts the repo root on sys.path
+
+try:  # POPIA: residents' details are masked before any text leaves Report Radar
+    from governance.privacy import mask_personal_info
+except ImportError:
+    mask_personal_info = None
 
 PROMPT = """You sort citizen reports for a South African municipality (Alexandra, Johannesburg).
 
@@ -100,7 +109,9 @@ def classify_with_llm(description: str, ask: Callable[[str], str] | None = None)
     """Classify one report with an LLM, falling back to keywords on any error."""
     ask = ask or anthropic_ask
     try:
-        result = parse_reply(ask(build_prompt(description)))
+        if mask_personal_info is None:  # never send unmasked text to an outside company
+            raise RuntimeError("governance/privacy.py is missing, so the report can't be masked")
+        result = parse_reply(ask(build_prompt(mask_personal_info(description))))
         result["source"] = "llm"
     except Exception as error:  # network, key, bad JSON: never block intake
         fallback = process_report(description)

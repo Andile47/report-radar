@@ -93,3 +93,28 @@ def test_llm_classifier_falls_back_to_keywords():
 def test_prompt_contains_the_report_and_categories():
     prompt = llm.build_prompt("Amanzi awekho")
     assert "Amanzi awekho" in prompt and "streetlights" in prompt
+
+
+def test_llm_only_receives_masked_text():
+    sent = []
+
+    def fake(prompt):
+        sent.append(prompt)
+        return '{"category": "water", "urgency": 3, "reason": "no water"}'
+
+    result = llm.classify_with_llm(
+        "No water. Call Mrs Dlamini on 082 123 4567 or dlamini@example.com, ID 9001015009087", ask=fake)
+    assert result["source"] == "llm"
+    prompt = sent[0]
+    for secret in ("082 123 4567", "dlamini@example.com", "9001015009087", "Dlamini"):
+        assert secret not in prompt
+    assert "[PHONE]" in prompt and "[EMAIL]" in prompt and "[ID]" in prompt
+
+
+def test_llm_is_not_called_when_masking_is_unavailable(monkeypatch):
+    monkeypatch.setattr(llm, "mask_personal_info", None)
+    called = []
+    result = llm.classify_with_llm("No water since this morning",
+                                   ask=lambda prompt: called.append(prompt))
+    assert called == []
+    assert result["source"] == "keywords" and result["category"] == "water"
