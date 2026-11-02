@@ -13,7 +13,7 @@ Fully synthetic. Produced by our generator script. No real residents, addresses 
 Project team members through the GitHub repository and the dashboard. There is no access control on the dashboard yet.
 
 ## How long we keep it
-No retention rule is set. A real deployment would need one (for example, delete or anonymise reports after a fixed period).
+The **decision log** keeps rows for 365 days; older rows are deleted automatically whenever it is written (change with `REPORT_RADAR_LOG_RETENTION_DAYS`). No retention rule is set yet for the **reports** themselves. A real deployment would need one (for example, delete or anonymise reports after a fixed period).
 
 ## Sensitive content
 Some descriptions mention health or vulnerability (clinics, elderly or disabled residents). In real data this is special personal information under POPIA and needs stronger protection. Reports also carry exact latitude and longitude, which can identify a household.

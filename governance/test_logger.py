@@ -105,3 +105,22 @@ def test_hotspot_run_is_logged_with_ranking_and_reason(log_file):
     assert row["output"] == "#1 Old Alexandra 30; #2 Tsutsumani 5"
     assert "k=2" in row["reason"] and "not by need" in row["reason"]
     assert row["rules_version"] == logger.RULES_VERSION["hotspots"]
+
+
+def test_rows_older_than_the_retention_period_are_deleted(log_file):
+    from datetime import datetime
+    old = logger.make_row("classifier", "OLD", "x", "y", "z")
+    old["timestamp"] = "2024-01-01T09:00:00"
+    unreadable = logger.make_row("classifier", "ODD", "x", "y", "z")
+    unreadable["timestamp"] = "not a date"
+    logger.log_decisions([old, unreadable])
+    logger.log_decision("classifier", "NEW", "x", "y", "z")  # writing prunes old rows
+    assert [r["report_id"] for r in read_rows(log_file)] == ["ODD", "NEW"]
+    assert logger.prune_log(log_file, days=1, now=datetime(2100, 1, 1)) == 1  # NEW is now old
+
+
+def test_retention_period_can_be_changed(monkeypatch):
+    monkeypatch.setenv("REPORT_RADAR_LOG_RETENTION_DAYS", "90")
+    assert logger.retention_days() == 90
+    monkeypatch.setenv("REPORT_RADAR_LOG_RETENTION_DAYS", "not a number")
+    assert logger.retention_days() == logger.DEFAULT_RETENTION_DAYS
