@@ -22,6 +22,11 @@ else:
     FOLIUM_IMPORT_ERROR = None
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+try:  # Week 6 decision log; the hotspot analysis works the same without it
+    from governance.logger import log_decision
+except ImportError:
+    log_decision = None
 DATA_FILE = PROJECT_ROOT / "data" / "reports.csv"
 OUTPUT_DIR = Path(__file__).resolve().parent
 CLUSTERS_FILE = OUTPUT_DIR / "clusters.csv"
@@ -336,6 +341,23 @@ def write_empty_outputs(message: str) -> None:
     map_view.save(MAP_FILE)
 
 
+def log_hotspot_run(reports: pd.DataFrame, clusters: pd.DataFrame, check: pd.DataFrame) -> int:
+    """Write one decision-log row for this run: the ranking and why 5 areas.
+    Only reads its inputs, so the analysis results are unchanged."""
+    if log_decision is None or clusters.empty:
+        return 0
+    ranking = "; ".join(f"#{int(row['rank'])} {row['area_name']} {int(row['report_count'])}"
+                        for _, row in clusters.iterrows())
+    if check.empty:
+        why = f"{len(clusters)} clusters (too few reports to compare cluster counts)"
+    else:
+        best = check.loc[check["silhouette"].idxmax()]
+        why = (f"{len(clusters)} clusters by KMeans on latitude/longitude; silhouette best at "
+               f"k={int(best['k'])} ({best['silhouette']:.3f}); ranked by report count, not by need")
+    return log_decision("hotspots", "", f"{len(reports)} reports with valid coordinates",
+                        ranking, why)
+
+
 def analyze() -> int:
     """Analyze reports and save hotspot outputs."""
     if FOLIUM_IMPORT_ERROR is not None:
@@ -369,6 +391,7 @@ def analyze() -> int:
     if not check.empty:
         plot_cluster_count(check, len(clusters))
     insights = write_insights(coordinate_reports, clusters, check)
+    log_hotspot_run(coordinate_reports, clusters, check)
 
     print("\nRanked hotspots (reported issue concentrations; not causal or predictive):")
     for _, cluster in clusters.iterrows():

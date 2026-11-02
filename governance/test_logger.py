@@ -89,3 +89,19 @@ def test_classifier_results_are_the_same_with_logging_on_or_off(tmp_path, monkey
     logged = read_rows(tmp_path / "decisions.csv")
     assert [r["report_id"] for r in logged] == ["T1", "T2", "T3"]
     assert logged[1]["output"] == "category=other; urgency=2; needs_review=yes"
+
+
+def test_hotspot_run_is_logged_with_ranking_and_reason(log_file):
+    sys.path.insert(0, str(ROOT / "hotspots"))
+    import hotspot_analysis
+
+    clusters = pd.DataFrame({"rank": [1, 2], "area_name": ["Old Alexandra", "Tsutsumani"],
+                             "report_count": [30, 5]})
+    check = pd.DataFrame({"k": [2, 3], "silhouette": [0.61, 0.42]})
+    reports = pd.DataFrame({"latitude": [0.0] * 35, "longitude": [0.0] * 35})
+    assert hotspot_analysis.log_hotspot_run(reports, clusters, check) == 1
+    row = read_rows(log_file)[0]
+    assert row["component"] == "hotspots"
+    assert row["output"] == "#1 Old Alexandra 30; #2 Tsutsumani 5"
+    assert "k=2" in row["reason"] and "not by need" in row["reason"]
+    assert row["rules_version"] == logger.RULES_VERSION["hotspots"]
