@@ -34,10 +34,10 @@ Run the project tests from the repository root with `python -m pytest forecast i
 | Overdue | `approvals.escalate_overdue(tickets, now) -> changed tickets` | Role 2 | stand-in |
 | Email | `notify.notify(event, ticket, resident_email=None, now=None)` for `received`, `assigned`, `approval_needed`, `overdue` | Role 3 | stand-in, saves to `outbox/` |
 
-The pipeline uses a teammate's function as soon as it exists in the module, with no change to `pipeline.py`. The decision log names any stand-in still in use. When yours lands, delete the matching stand-in from `fallbacks.py` and its test from `test_fallbacks.py`.
+The pipeline uses a teammate's function as soon as it exists in the module, with no change to `pipeline.py`. The decision log names any stand-in still in use. All three real modules are now in, so the stand-ins are only a safety net if a function goes missing. Team names must be exactly the agreed ones (Water, Sanitation, Electricity, Roads, Waste, Intake desk): the dashboard queues and team email addresses depend on them, and `test_routing.py` checks this.
 
-**Saving decisions:** the Workflow tab calls `approvals.decide(...)` but doesn't save the ticket afterwards, so `decide` must save its result with `pipeline.save_ticket(ticket)`.
+**Supervisor decisions:** the Workflow tab calls `pipeline.record_decision(ticket, approver, decision, note, new_team=None)`. It runs `approvals.decide(...)`, saves the ticket, emails the team when the ticket is approved or reassigned, and logs the decision. `decide` itself only returns the updated ticket.
 
-**Functions other code can use:** `process_report(text, ward, resident_email=None, now=None)`, `load_tickets()`, `save_ticket(ticket)`, `process_inbox(path)` and `check_overdue(now=None)`. The resident's email is only passed to the email step and is never saved.
+**Functions other code can use:** `process_report(text, ward, resident_email=None, now=None)`, `load_tickets()`, `save_ticket(ticket)`, `record_decision(...)`, `process_inbox(path)` and `check_overdue(now=None)`. The resident's email is only passed to the email step and is never saved.
 
 **Commands:** `python workflow/pipeline.py --demo`, `--inbox <file.csv>` (columns `report_ref, description, ward, resident_email`; see `inbox/new_reports_example.csv`) and `--check-overdue`. Live files (`data/tickets.csv`, `data/processed_inbox.csv`, `inbox/`, `outbox/`) are not committed; `data/tickets_example.csv` shows the format.
