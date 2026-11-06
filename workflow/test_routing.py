@@ -54,3 +54,24 @@ def test_urgent_tickets_in_different_wards_get_the_same_deadline():
     old_alexandra = routing.route({**common, "ward": "Old Alexandra"})
     tsutsumani = routing.route({**common, "ward": "Tsutsumani"})
     assert old_alexandra["due_by"] == tsutsumani["due_by"]
+
+
+def test_route_returns_a_new_ticket_without_changing_the_input(monkeypatch):
+    ticket = {"ticket_id": "TKT-TEST-01", "description_masked": "Made-up pipe leak report",
+              "category": "water", "ward": "East Bank", "urgency": 4,
+              "received_at": "2026-11-03T08:15:00", "reason": "made-up test reason"}
+    original = ticket.copy()
+    logged = []
+    monkeypatch.setattr(routing, "log_decision", lambda *args: logged.append(args))
+
+    routed = routing.route(ticket)
+
+    assert routed is not ticket
+    assert ticket == original
+    assert routed["assigned_team"] == "Water team"
+    assert routed["depot"] == "East depot"
+    assert logged == [(
+        "routing", "TKT-TEST-01", "Made-up pipe leak report",
+        f"team=Water team; depot=East depot; due_by={routed['due_by']}",
+        "made-up test reason",
+    )]
