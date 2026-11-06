@@ -27,3 +27,11 @@ def test_categories_route_to_their_teams(category, team):
     ticket = {"category": category, "ward": "Old Alexandra", "urgency": 3,
               "received_at": "2026-11-03T08:15:00"}
     assert routing.route(ticket)["assigned_team"] == team
+
+
+def test_unknown_category_and_ward_use_safe_defaults():
+    ticket = {"category": "unknown service", "ward": "Unknown ward", "urgency": 3,
+              "received_at": "2026-11-03T08:15:00"}
+    routed = routing.route(ticket)
+    assert routed["assigned_team"] == "Intake desk"
+    assert routed["depot"] == "Central depot"
