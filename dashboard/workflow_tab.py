@@ -184,12 +184,18 @@ def _display(value, fallback: str = "Not provided") -> str:
     return redact_emails(value).strip() or fallback
 
 
-def _approval_action(decide, ticket: dict, approver: str, decision: str,
-                     note: str, team: str | None = None) -> None:
-    if team:
-        ticket["assigned_team"] = team
-    decide(ticket, approver.strip(), decision, note.strip(),
-           datetime.now().astimezone().isoformat(timespec="seconds"))
+def _approval_action(record_decision, ticket: dict, approver: str, decision: str,
+                     note: str, team: str | None = None) -> dict:
+    """Save a supervisor decision through the pipeline, which also emails the team and logs it."""
+    return record_decision(ticket, approver.strip(), decision, note.strip(), new_team=team)
+
+
+def _saved(message: str) -> None:
+    """Show the message after reloading, so the decided ticket leaves the list."""
+    import streamlit as st
+
+    st.session_state["workflow_saved"] = message
+    st.rerun()
 
 
 def _show_report_form() -> None:
@@ -267,7 +273,10 @@ def _show_approvals(tickets: list[dict] | None, error: str | None) -> None:
     if not pending:
         st.info("There are no reports waiting for a supervisor decision.")
         return
-    decide = _optional_function("workflow.approvals", "decide")
+    saved = st.session_state.pop("workflow_saved", None)
+    if saved:
+        st.success(saved)
+    decide = _optional_function("workflow.pipeline", "record_decision")
     if decide is None:
         st.info("Supervisor decisions are not ready yet; the decision-saving step is still being added.")
     approver = st.text_input("Your name", key="workflow_approver")
@@ -287,9 +296,10 @@ def _show_approvals(tickets: list[dict] | None, error: str | None) -> None:
             if approve_col.button("Approve", key=f"approve_{key_id}_{index}", disabled=disabled):
                 try:
                     _approval_action(decide, ticket, approver, "approve", "")
-                    st.success(f"Ticket {ticket_id} approved.")
                 except Exception:
                     st.error("We could not save that decision. Please try again.")
+                else:
+                    _saved(f"Ticket {ticket_id} approved. The team has been emailed.")
             if reassign_col.button("Reassign", key=f"reassign_{key_id}_{index}", disabled=disabled):
                 st.session_state[action_key] = "reassign"
             if reject_col.button("Reject", key=f"reject_{key_id}_{index}", disabled=disabled):
@@ -303,9 +313,10 @@ def _show_approvals(tickets: list[dict] | None, error: str | None) -> None:
                     try:
                         _approval_action(decide, ticket, approver, "reassign", reason, new_team)
                         st.session_state.pop(action_key, None)
-                        st.success(f"Ticket {ticket_id} sent to {new_team}.")
                     except Exception:
                         st.error("We could not save that decision. Please try again.")
+                    else:
+                        _saved(f"Ticket {ticket_id} sent to {new_team}. The team has been emailed.")
             elif action == "reject":
                 reason = st.text_input("Why are you rejecting it?", key=f"reason_{key_id}_{index}")
                 if st.button("Save rejection", key=f"save_reject_{key_id}_{index}",
@@ -313,9 +324,10 @@ def _show_approvals(tickets: list[dict] | None, error: str | None) -> None:
                     try:
                         _approval_action(decide, ticket, approver, "reject", reason)
                         st.session_state.pop(action_key, None)
-                        st.success(f"Ticket {ticket_id} rejected.")
                     except Exception:
                         st.error("We could not save that decision. Please try again.")
+                    else:
+                        _saved(f"Ticket {ticket_id} rejected.")
 
 
 def _show_sent_emails() -> None:

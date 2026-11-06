@@ -72,3 +72,15 @@ def test_real_pipeline_tickets_are_loaded(tmp_path, monkeypatch):
 
     assert message is None
     assert [t["ticket_id"] for t in tickets] == ["TKT-000001"]
+
+def test_approval_buttons_save_through_the_pipeline(tmp_path, monkeypatch):
+    from workflow import pipeline
+    from workflow_tab import _approval_action
+    monkeypatch.setattr(pipeline, "TICKETS_FILE", tmp_path / "tickets.csv")
+    calls = []
+    record = lambda *args, **kwargs: calls.append((args, kwargs))
+    ticket = {"ticket_id": "TKT-000001", "status": "awaiting_approval"}
+
+    _approval_action(record, ticket, " Sup ", "reassign", " Wrong team ", "Roads")
+
+    assert calls == [((ticket, "Sup", "reassign", "Wrong team"), {"new_team": "Roads"})]
