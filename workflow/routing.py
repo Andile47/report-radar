@@ -5,6 +5,8 @@ import csv
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from governance.logger import log_decision
+
 # Team assumption: these service-level targets have not yet been measured.
 # Deadlines depend on urgency, not ward or report volume. Week 6 found that
 # urgent reports already wait 44 hours in Tsutsumani versus 24 in Old Alexandra.
@@ -33,4 +35,11 @@ def route(ticket: dict) -> dict:
               + timedelta(hours=sla_hours)).isoformat(timespec="seconds")
 
     routed.update(assigned_team=team, depot=depot, sla_hours=sla_hours, due_by=due_by)
+    log_decision(
+        "routing",
+        ticket.get("ticket_id"),
+        ticket.get("description_masked", ""),
+        f"team={team}; depot={depot}; due_by={due_by}",
+        ticket.get("reason", ""),
+    )
     return routed
