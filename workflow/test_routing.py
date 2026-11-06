@@ -16,12 +16,12 @@ def mute_routing_log(monkeypatch):
 
 
 @pytest.mark.parametrize("category,team", [
-    ("water", "Water team"),
-    ("sanitation", "Sanitation team"),
-    ("electricity", "Electricity team"),
-    ("streetlights", "Electricity team"),
-    ("roads", "Roads team"),
-    ("refuse", "Waste team"),
+    ("water", "Water"),
+    ("sanitation", "Sanitation"),
+    ("electricity", "Electricity"),
+    ("streetlights", "Electricity"),
+    ("roads", "Roads"),
+    ("refuse", "Waste"),
     ("other", "Intake desk"),
 ])
 def test_categories_route_to_their_teams(category, team):
@@ -68,10 +68,18 @@ def test_route_returns_a_new_ticket_without_changing_the_input(monkeypatch):
 
     assert routed is not ticket
     assert ticket == original
-    assert routed["assigned_team"] == "Water team"
+    assert routed["assigned_team"] == "Water"
     assert routed["depot"] == "East depot"
     assert logged == [(
         "routing", "TKT-TEST-01", "Made-up pipe leak report",
-        f"team=Water team; depot=East depot; due_by={routed['due_by']}",
+        f"team=Water; depot=East depot; due_by={routed['due_by']}",
         "made-up test reason",
     )]
+
+
+def test_every_routed_team_is_one_of_the_agreed_teams_with_an_email_address():
+    from workflow import fallbacks
+    agreed = {"Water", "Sanitation", "Electricity", "Roads", "Waste", "Intake desk"}
+    assert set(routing.ROUTING_RULES.values()) <= agreed
+    for team in set(routing.ROUTING_RULES.values()) - {"Intake desk"}:
+        assert team in fallbacks.TEAM_ADDRESSES, team

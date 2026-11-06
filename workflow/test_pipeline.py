@@ -67,7 +67,7 @@ def test_urgent_report_waits_for_a_supervisor(flow):
     ticket = pipeline.process_report("Live wires hanging low across the road", "Tsutsumani", now=NOW)
     assert ticket["category"] == "electricity" and int(ticket["urgency"]) == 5
     assert (ticket["status"], ticket["approval_status"]) == ("awaiting_approval", "pending")
-    assert ticket["assigned_team"] == "Electricity team" and ticket["due_by"] == "2026-11-04T08:00:00+02:00"
+    assert ticket["assigned_team"] == "Electricity" and ticket["due_by"] == "2026-11-04T08:00:00+02:00"
     assert emails(flow["outbox"]) == ["TKT-000001-approval_needed.eml"]
 
 

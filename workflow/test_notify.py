@@ -19,7 +19,7 @@ TICKET = {
     "urgency": 5,
     "review_required": False,
     "reason": "burst pipe",
-    "assigned_team": "Water team",
+    "assigned_team": "Water",
     "depot": "North depot",
     "sla_hours": 24,
     "due_by": "2026-11-04T08:15:00",
