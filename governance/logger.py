@@ -47,6 +47,7 @@ RULES_VERSION = {
     "hotspots": "hotspots-2026.10",
     "workflow": "workflow-2026.11",
     "approvals": "approvals-2026.11",
+    "notifications": "notifications-2026.11",
 }
 
 

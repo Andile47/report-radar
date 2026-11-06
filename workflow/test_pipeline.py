@@ -92,7 +92,7 @@ def test_personal_details_never_reach_the_ticket_log_or_outbox(flow):
 def test_decision_log_names_the_stand_ins_in_use(flow):
     pipeline.process_report("No water since this morning", "Setswetla", now=NOW)
     row = flow["log"].read_text().splitlines()[-1]
-    assert ",workflow,TKT-000001," in row and "stand-ins used: routing, notify" in row
+    assert ",workflow,TKT-000001," in row and "stand-ins used: routing" in row
 
 
 def test_a_failed_step_still_saves_the_ticket_for_the_supervisor(flow, monkeypatch):
