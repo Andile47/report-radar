@@ -67,7 +67,7 @@ def test_urgent_report_waits_for_a_supervisor(flow):
     ticket = pipeline.process_report("Live wires hanging low across the road", "Tsutsumani", now=NOW)
     assert ticket["category"] == "electricity" and int(ticket["urgency"]) == 5
     assert (ticket["status"], ticket["approval_status"]) == ("awaiting_approval", "pending")
-    assert ticket["assigned_team"] == "Electricity" and ticket["due_by"] == "2026-11-04T08:00:00+02:00"
+    assert ticket["assigned_team"] == "Electricity team" and ticket["due_by"] == "2026-11-04T08:00:00+02:00"
     assert emails(flow["outbox"]) == ["TKT-000001-approval_needed.eml"]
 
 
@@ -92,7 +92,7 @@ def test_personal_details_never_reach_the_ticket_log_or_outbox(flow):
 def test_decision_log_names_the_stand_ins_in_use(flow):
     pipeline.process_report("No water since this morning", "Setswetla", now=NOW)
     row = flow["log"].read_text().splitlines()[-1]
-    assert ",workflow,TKT-000001," in row and "stand-ins used: routing" in row
+    assert ",workflow,TKT-000001," in row and "stand-ins used:" not in row
 
 
 def test_a_failed_step_still_saves_the_ticket_for_the_supervisor(flow, monkeypatch):
