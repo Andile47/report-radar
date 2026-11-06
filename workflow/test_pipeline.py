@@ -143,3 +143,36 @@ def test_demo_runs_and_can_be_repeated(flow, tmp_path, monkeypatch, capsys):
     assert pipeline.main(["--demo"]) == 0
     assert len(pipeline.load_tickets()) == 10
     assert "0 new, 10 already processed" in capsys.readouterr().out
+
+
+def test_supervisor_approval_is_saved_and_the_team_emailed(flow):
+    ticket = pipeline.process_report("Live wires hanging low across the road", "East Bank", now=NOW)
+    pipeline.record_decision(ticket, "Sup. Naidoo", "approve", now=NOW)
+    [saved] = pipeline.load_tickets()
+    assert (saved["status"], saved["approval_status"], saved["approver"]) == (
+        "assigned", "approved", "Sup. Naidoo")
+    assert emails(flow["outbox"]) == ["TKT-000001-approval_needed.eml", "TKT-000001-assigned.eml"]
+    assert "supervisor decision: approve" in flow["log"].read_text()
+
+
+def test_supervisor_can_reassign_to_another_team(flow):
+    ticket = pipeline.process_report("Live wires hanging low across the road", "East Bank", now=NOW)
+    pipeline.record_decision(ticket, "Sup", "reassign", "Fallen pole is a roads job", "Roads", now=NOW)
+    [saved] = pipeline.load_tickets()
+    assert (saved["status"], saved["approval_status"], saved["assigned_team"]) == (
+        "assigned", "reassigned", "Roads")
+    assert saved["decision_note"] == "Fallen pole is a roads job"
+
+
+def test_rejection_is_saved_and_nobody_is_told_to_start_work(flow):
+    ticket = pipeline.process_report("Live wires hanging low across the road", "East Bank", now=NOW)
+    pipeline.record_decision(ticket, "Sup", "reject", "Duplicate of TKT-000099", now=NOW)
+    assert pipeline.load_tickets()[0]["status"] == "rejected"
+    assert emails(flow["outbox"]) == ["TKT-000001-approval_needed.eml"]
+
+
+def test_incomplete_decision_changes_nothing(flow):
+    ticket = pipeline.process_report("Live wires hanging low across the road", "East Bank", now=NOW)
+    with pytest.raises(ValueError):
+        pipeline.record_decision(ticket, "Sup", "reject", "", now=NOW)
+    assert pipeline.load_tickets()[0]["status"] == "awaiting_approval"

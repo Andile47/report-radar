@@ -114,7 +114,7 @@ def step(module: str, name: str):
         real = getattr(importlib.import_module(f"workflow.{module}"), name, None)
     except ImportError:
         real = None
-    return (real, False) if callable(real) else (getattr(fallbacks, name), True)
+    return (real, False) if callable(real) else (getattr(fallbacks, name, None), True)
 
 
 def now_iso(now=None) -> str:
@@ -187,6 +187,31 @@ def _park_failed(ticket: dict, stage: str, error: Exception, when: str) -> dict:
         fallbacks.notify("approval_needed", ticket, now=when)
     except Exception:  # the ticket is saved and logged even if the email fails
         pass
+    return ticket
+
+
+# ---------- supervisor decisions ----------
+def record_decision(ticket: dict, approver: str, decision: str, note: str = "",
+                    new_team: str | None = None, now=None) -> dict:
+    """Apply a supervisor's approve / reassign / reject (Role 2's decide), save
+    the ticket, email the team when it now has work, and log it.
+    Raises ValueError for an incomplete decision, e.g. a rejection without a note."""
+    when = now_iso(now)
+    decide, fake = step("approvals", "decide")
+    if fake:
+        raise RuntimeError("Supervisor decisions need workflow/approvals.py decide()")
+    ticket = decide(ticket, approver, decision, note, when, new_team=new_team)
+    save_ticket(ticket)
+    if ticket.get("status") == "assigned":
+        notify, _ = step("notify", "notify")
+        try:
+            notify("assigned", ticket, now=when)
+        except Exception as error:  # the decision is saved even if the email fails
+            _log(ticket["ticket_id"], ticket.get("description_masked", ""), "assigned email failed",
+                 type(error).__name__)
+    _log(ticket["ticket_id"], ticket.get("description_masked", ""),
+         f"status={ticket['status']}; team={ticket.get('assigned_team')}",
+         f"supervisor decision: {decision}")
     return ticket
 
 
