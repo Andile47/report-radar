@@ -109,3 +109,29 @@ The workflow description connects several steps that would otherwise need to be 
 The project has identified important risks, not just benefits. The public dashboard currently displays report text without masking, so the risk register says this must be fixed before real data is used. Language test results improved on curated examples, but those examples need fluent-speaker review and do not cover every way residents may write. Finally, fewer reports do not necessarily mean less need. A pilot should track service outcomes by ward and include community feedback.
 
 **Sources:** [Risk register](../governance/risk_register.csv), [Week 6 risk report](week6_risk_report.md), [Area fairness check](../governance/area_fairness.md)
+
+## Slide 9: A responsible pilot needs municipal data, safeguards, and operating arrangements
+
+- Validate on an approved sample of real reports
+- Set privacy, access, and resident-contact arrangements
+- Confirm team contacts, deadlines, and mail-server setup
+
+**Visual:** A readiness checklist. Show costs as “to be scoped”; no project cost estimate is available.
+
+**Speaker notes:**  
+The project materials do not give a pilot cost, so we should not invent one. Before a pilot, the municipality would need to approve an appropriate real-report sample and review privacy and access safeguards. It would also need to confirm team ownership and whether the proposed deadlines match real operations. If resident updates are included, the municipality must agree how contact preferences and consent will be handled. Real email sending also requires a mail server and verified addresses.
+
+**Sources:** [Risk register](../governance/risk_register.csv), [Workflow model card](../governance/model_cards/workflow.md)
+
+## Slide 10: Approve a scoped validation phase, not a production rollout
+
+- Nominate municipal data, operations, and privacy contacts
+- Agree what a pilot must prove and how results will be reviewed
+- Return with validated findings and a costed proposal
+
+**Visual:** A three-stage path: scope -> validate -> decide.
+
+**Speaker notes:**  
+Our ask is to explore a controlled validation phase, not to deploy Report Radar for real decisions today. We need municipal contacts who can help review data, service operations, and privacy requirements. Together, we can agree what the pilot should test, including accuracy, urgent wait times, language coverage, and the workflow's fit with real teams. Once the requirements and costs are understood, executives can make an informed decision about whether to proceed.
+
+**Sources:** [One-page explanation](one_page_explanation.md), [Risk register](../governance/risk_register.csv)
