@@ -2,13 +2,14 @@
 
 **Name:** Report Radar
 
-## Tagline options
+## Chosen tagline
 
-1. **See the signal. Plan the response.**
-2. **From resident reports to ready teams.**
-3. **Know where needs are rising.**
+**Know where needs are rising.**
 
-Choose one tagline for the deck, dashboard screenshots, and presentation materials.
+## Options considered
+
+- See the signal. Plan the response.
+- From resident reports to ready teams.
 
 ## Colour palette
 

@@ -27,7 +27,7 @@ Use synthetic examples only. Rehearse the live path before presenting, and updat
 
 **Say:** “Imagine a resident sees sewage flowing near homes where children play. They send a report and need it to reach the right team, with a person able to review it when the situation is urgent. This is a made-up example, not a real resident story.
 
-“Hello, we are the Report Radar team. I’m Andile Khoza, Showcase Lead and Scrum Master. With me are petroblyn, Tshepo Tleane, Thembelihle, and Dikeledi. We built a planning aid for municipal service reports in Alexandra, Johannesburg. Today we’ll follow a report through the workflow, then look at expected workload and where reports are concentrated. All project data is synthetic, so these results are not a claim about current service conditions.”
+“Hello, we are the Report Radar team: **Know where needs are rising.** I’m Andile Khoza, Showcase Lead and Scrum Master. With me are petroblyn, Tshepo Tleane, Thembelihle, and Dikeledi. We built a planning aid for municipal service reports in Alexandra, Johannesburg. Today we’ll follow a report through the workflow, then look at expected workload and where reports are concentrated. All project data is synthetic, so these results are not a claim about current service conditions.”
 
 **Evidence:** [docs/one_page_explanation.md](one_page_explanation.md) describes the project and synthetic dataset; the sample report wording is in [workflow/inbox/new_reports_example.csv](../workflow/inbox/new_reports_example.csv).
 
