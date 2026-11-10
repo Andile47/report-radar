@@ -46,9 +46,10 @@ Use synthetic examples only. Rehearse the live path before presenting, and updat
 **Say and do:**
 
 - “I’m Dikeledi. I’ll submit a synthetic report using wording from our sample inbox.” Open **Workflow**. Enter: “Sewage flowing into the Jukskei near homes where children play.” Choose **Setswetla** and leave the optional email blank. Select **Send report**.
+- Note the ticket number shown after submitting. The live site already has an example ticket with identical wording, so use the ticket number, not the wording, to distinguish the new report.
 - Point to the generated ticket reference, assigned team, and expected fix date. Say: “The date is an estimate, not a promise.” Do not read out an unverified value as a general service standard.
 - In **My team’s queue**, choose the team shown on the ticket. Point to the report and its place in the queue. Say: “The queue puts higher-urgency work first, then the closest deadline.”
-- In **Waiting for approval**, open the same report. Read its masked description before acting. Enter the presenter’s name and select **Approve**. Point out the confirmation. Say: “A person makes this decision; the system records it and notifies the team.”
+- In **Waiting for approval**, find and open the ticket with the number you noted after submitting. Do not approve the example ticket with the same wording. Read the selected ticket’s masked description before acting. Enter the presenter’s name and select **Approve**. Point out the confirmation. Say: “A person makes this decision; the system records it and notifies the team.”
 - Open **Sent emails** and expand the update. Say: “This is a saved email preview for the demo. The site stores these messages; it does not send real email. Resident addresses are not displayed here.”
 - Open **Risk & compliance** and scroll to **Latest decisions the system made**. Point to the new workflow entry and its reason. If the page says these are example decisions or the new entry is missing, say so and do not present the example as a live decision.
 
@@ -147,6 +148,7 @@ Say: “The live site or network is unavailable, so we’ll use our offline reco
 - Rehearse each spoken handover; the next person should be ready on the correct tab before their segment starts.
 - Explain “synthetic” as made-up project data; explain “hotspot” as an area with many reports. Avoid unexplained technical terms.
 - Verify every number against the source ledger and make the deck match this script. If a source file changes, update both before presenting.
+- Rehearse noting the submitted ticket number and approving that exact number in **Waiting for approval**, not the example ticket with the same wording.
 - Confirm the workflow sample reaches supervisor approval, approval updates the ticket, an email preview appears, and the decision log identifies the new entry as live. If any check fails, use the labelled backup.
 - Check that no email address or other personal information is visible in the live demo, screenshots, or recording.
 - Ask each team member to answer one practice question about another role’s work.
