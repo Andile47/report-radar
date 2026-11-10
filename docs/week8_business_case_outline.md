@@ -57,3 +57,29 @@ The project brings several tasks into one view. It sorts a report by problem typ
 I'll show the dashboard's forecast, hotspot, and risk views, using the project's synthetic data. As we look at each result, I'll point out what it can and cannot tell us. One important limit: the workflow documentation says messages are saved to an outbox and are not actually sent. We should demonstrate the report-to-ticket workflow only if that part has been checked and is working on the presentation day.
 
 **Sources:** [Workflow model card](../governance/model_cards/workflow.md), [Week 7 user guide](week7_user_guide.md)
+
+## Slide 5: The sample forecast is steady, while water is the service to watch
+
+- About 69 reports per week are forecast for the next four weeks
+- The likely total is 260-292 reports
+- Water is the only service with a rising trend in the sample
+
+**Visual:** A four-week forecast with its likely range, plus a small water trend callout. Label all figures as synthetic.
+
+**Speaker notes:**  
+In the synthetic sample, the forecast is about 69 reports a week over the next four weeks, or 276 overall. Its likely range is 260 to 292, and the forecast is close to the previous four weeks' level. Water is the service to watch: it is the only one with a rising trend in this sample, at about one additional report a week. These are planning signals to test, not real municipal forecasts.
+
+**Source:** [One-page explanation](one_page_explanation.md)
+
+## Slide 6: The sample's urgent wait-time differences need investigation before planning by hotspot
+
+- Tsutsumani: 44.3-hour median for resolved urgent reports
+- Old Alexandra: 23.55-hour median
+- Three wards exceed the project's screening threshold
+
+**Visual:** A horizontal bar chart of urgent median resolution time by ward. Label the chart “Synthetic sample; resolved reports only.”
+
+**Speaker notes:**  
+The fairness check found a difference in the synthetic sample: among resolved urgent reports, the median time was 44.3 hours in Tsutsumani and 23.55 hours in Old Alexandra. Three wards exceeded the project's screening threshold. This does not prove why the difference occurred or establish unfair intent. It is a reason to check real operational data and community experience before using report counts to guide crew allocation.
+
+**Sources:** [Area fairness check](../governance/area_fairness.md), [Week 6 risk report](week6_risk_report.md)
