@@ -83,3 +83,29 @@ In the synthetic sample, the forecast is about 69 reports a week over the next f
 The fairness check found a difference in the synthetic sample: among resolved urgent reports, the median time was 44.3 hours in Tsutsumani and 23.55 hours in Old Alexandra. Three wards exceeded the project's screening threshold. This does not prove why the difference occurred or establish unfair intent. It is a reason to check real operational data and community experience before using report counts to guide crew allocation.
 
 **Sources:** [Area fairness check](../governance/area_fairness.md), [Week 6 risk report](week6_risk_report.md)
+
+## Slide 7: Automation can organise routine steps while supervisors handle uncertain or urgent cases
+
+- The described workflow masks, sorts, routes, saves, and logs reports
+- Urgent or unclear reports wait for supervisor review
+- Emails are saved to an outbox; actual sending needs setup
+
+**Visual:** A seven-step workflow line with a human-review branch and a dashed email step labelled “saved, not sent.”
+
+**Speaker notes:**  
+The workflow description connects several steps that would otherwise need to be coordinated: hiding personal details, sorting a report, routing it, setting a deadline, saving it, and recording the decision. Urgent or unclear reports go to a supervisor for review. The documentation says emails are saved rather than sent. The deadlines are assumptions, and the workflow has not been tested with real teams, so those details need municipal validation.
+
+**Source:** [Workflow model card](../governance/model_cards/workflow.md)
+
+## Slide 8: Privacy, language, and fairness gaps must be addressed before real reports are used
+
+- Public dashboard text is currently unmasked
+- Language support still needs fluent-speaker review
+- Raw report counts can overlook quieter wards
+
+**Visual:** Three risk-and-action columns: protect report text; review translations; monitor service outcomes by ward.
+
+**Speaker notes:**  
+The project has identified important risks, not just benefits. The public dashboard currently displays report text without masking, so the risk register says this must be fixed before real data is used. Language test results improved on curated examples, but those examples need fluent-speaker review and do not cover every way residents may write. Finally, fewer reports do not necessarily mean less need. A pilot should track service outcomes by ward and include community feedback.
+
+**Sources:** [Risk register](../governance/risk_register.csv), [Week 6 risk report](week6_risk_report.md), [Area fairness check](../governance/area_fairness.md)
