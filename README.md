@@ -85,6 +85,7 @@ The agreed columns, used by every module:
 
 ## Documents
 
+- [`docs/technical_documentation.md`](docs/technical_documentation.md): architecture, modules, setup, testing, privacy, and known limits
 - [`docs/deployment.md`](docs/deployment.md): how the live dashboard is deployed and updated, what resets there, and the check before a demo
 - [`docs/one_page_explanation.md`](docs/one_page_explanation.md): what Report Radar found, for non-technical readers
 - [`docs/demo_script.md`](docs/demo_script.md): the 5-minute demo, who presents what
