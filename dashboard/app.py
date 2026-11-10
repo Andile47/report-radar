@@ -48,6 +48,10 @@ try:
     from workflow_tab import show_workflow_tab
 except ImportError:
     show_workflow_tab = None
+try:
+    from weekly_summary import show_weekly_summary
+except ImportError:
+    show_weekly_summary = None
 
 ROOT = Path(__file__).resolve().parent.parent
 ROOT = Path(__file__).resolve().parent.parent
@@ -408,6 +412,12 @@ with tab_o:
             st.markdown(f"We tested the forecast on past weeks. It was usually within **about {error:.0f} "
                         "reports a week** of what really happened.")
         st.markdown("All the data in this demo is synthetic: realistic, but not real residents.")
+
+    if show_weekly_summary is not None:
+        st.divider()
+        section("Weekly summary for managers",
+                "Last week in one page, for all teams or one team. Preview it or download it to share.")
+        show_weekly_summary(reports, by_cat)
 
 # =====================================================================
 # FORECAST
