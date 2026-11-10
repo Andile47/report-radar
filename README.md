@@ -35,6 +35,7 @@ The dashboard is written for readers without a technical background: it opens wi
 
 - **Summary box:** a green box (or a red surge alert) saying how many reports to expect next week and next month, which problem type to keep an eye on, and which areas are busiest.
 - **Headline numbers:** reports in the last year, urgent reports (high or danger to life), reports not fixed yet, and urgent reports not fixed yet. The urgency scale is explained underneath.
+- **Weekly summary for managers (bottom of the Overview tab):** last week's reports for all teams or one team (department): totals against the week before, urgent and unfixed reports, time to fix, busiest areas, next week's forecast and the live workflow tickets. Preview it on the page or download it to share.
 - **Workload forecast tab:** reports expected next week and over the next 4 weeks; a chart of the past year (blue) and the forecast (orange) with its likely range shaded; "What this means" in plain bullets; a week-by-week table; and a chart for one problem type, opening on the one that is rising.
 - **Capacity planner (bottom of the Workload forecast tab):** enter the number of crews and how many reports one crew fixes in a week, and it says whether next month is covered, how far behind unfixed reports will fall if not, and how many crews you need.
 - **Problem areas tab:** a bar chart and table ranking the areas from busiest to quietest, what that means, and an interactive map (the map needs an internet connection).
