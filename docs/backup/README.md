@@ -8,7 +8,7 @@ Capture these screens from the live site with synthetic data only. Leave the opt
 - [ ] `04_supervisor_approval.png` - Waiting for approval with the submitted ticket number opened. Show its masked description and decision controls. If an example has identical wording, do not select it.
 - [ ] `05_approval_confirmation.png` - After approving the submitted ticket. Show the confirmation and the same ticket number where visible.
 - [ ] `06_sent_email_preview.png` - Sent emails expanded for the workflow update. Show the message preview and recipient label, with all addresses hidden. This is a saved preview, not a delivered email.
-- [ ] `07_decision_log.png` - Risk & compliance tab at Latest decisions. Show the workflow row for the submitted ticket and its reason. Make clear whether the row is live or an example.
+- [ ] `07_decision_log.png` - Intentionally skipped by the user; no screenshot expected.
 - [ ] `08_forecast.png` - Forecast tab with the current workload view, timeframe, and likely range labels readable. Use the values currently shown by the live dashboard.
 - [ ] `09_problem_areas_map.png` - Problem areas tab with the map loaded and the ranked areas visible and readable.
 
