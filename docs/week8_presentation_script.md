@@ -167,3 +167,21 @@ Project figures are spoken with source notes above. The timing figures are rehea
 | 3,994 reports; 61% | Synthetic hotspot dataset | [hotspots/insights.md](../hotspots/insights.md) |
 | Two-minute recording | Requested backup duration; not a project performance figure | Week 8 task brief; [docs/deployment.md](deployment.md) requires an offline recording or screenshots but does not set the recording length |
 | 15 minutes; two-minute check; one hour | App wake-up, post-push check, and no-push window | [docs/deployment.md](deployment.md) |
+
+## Week 8 delivery log
+
+- Showcase date: to be confirmed
+- Showcase time: to be confirmed
+
+### Halfway check-in
+
+- Status: not held yet
+- Date:
+- Who attended:
+- Blockers:
+
+### Rehearsal log
+
+| Date | Total time | What went wrong | What we changed |
+| ---- | ---------- | --------------- | --------------- |
+|      |            |                 |                 |
