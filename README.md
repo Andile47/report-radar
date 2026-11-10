@@ -2,7 +2,7 @@
 
 [![Open the live dashboard](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://reportradar.streamlit.app)
 
-**Live dashboard:** [reportradar.streamlit.app](https://reportradar.streamlit.app). No install needed; it runs on the synthetic data in this repo.
+**Live dashboard:** [reportradar.streamlit.app](https://reportradar.streamlit.app). No install needed; it runs on the synthetic data in this repo. On a fresh visit it loads 10 example tickets so every tab has data; see [`docs/deployment.md`](docs/deployment.md) for how it is deployed, what resets, and the check to run after every push.
 
 Report Radar helps a municipality see **when** citizen reports are likely to surge and **where** problems are concentrated. Citizens report issues such as burst pipes, potholes and load-shedding faults. Report Radar sorts each report by type and urgency, forecasts the next month's workload, and maps the hotspots, so teams can plan before the surge arrives.
 
@@ -84,6 +84,7 @@ The agreed columns, used by every module:
 
 ## Documents
 
+- [`docs/deployment.md`](docs/deployment.md): how the live dashboard is deployed and updated, what resets there, and the check before a demo
 - [`docs/one_page_explanation.md`](docs/one_page_explanation.md): what Report Radar found, for non-technical readers
 - [`docs/demo_script.md`](docs/demo_script.md): the 5-minute demo, who presents what
 - [`docs/week7_user_guide.md`](docs/week7_user_guide.md): the Workflow steps for residents, team members, and supervisors
