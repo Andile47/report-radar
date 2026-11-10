@@ -84,3 +84,12 @@ def test_approval_buttons_save_through_the_pipeline(tmp_path, monkeypatch):
     _approval_action(record, ticket, " Sup ", "reassign", " Wrong team ", "Roads")
 
     assert calls == [((ticket, "Sup", "reassign", "Wrong team"), {"new_team": "Roads"})]
+
+
+def test_example_tickets_are_labelled_in_plain_words():
+    from workflow_tab import example_note
+    tickets = [{"ticket_id": "TKT-000001"}, {"ticket_id": "TKT-000002"}, {"ticket_id": "TKT-000011"}]
+    assert example_note(tickets, {"TKT-000001", "TKT-000002"}).startswith(
+        "2 of these tickets are made-up example reports")
+    assert example_note(tickets, set()) is None
+    assert example_note(None, {"TKT-000001"}) is None

@@ -190,6 +190,24 @@ def _park_failed(ticket: dict, stage: str, error: Exception, when: str) -> dict:
     return ticket
 
 
+# ---------- example tickets for a fresh copy (e.g. the live site) ----------
+def load_demo_tickets_if_empty(now=None) -> int:
+    """If there are no tickets at all, put the 10 example reports through the
+    normal workflow (masked, routed, approved or queued, emailed and logged), so a
+    fresh copy such as the live site has something to show. Returns how many
+    tickets were added: 0 when tickets already exist."""
+    if load_tickets():
+        return 0
+    return len(process_inbox(INBOX_EXAMPLE, now=now)["new"])
+
+
+def demo_ticket_ids() -> set[str]:
+    """Ticket ids that came from the example inbox, so screens can label them."""
+    with Path(INBOX_EXAMPLE).open(newline="", encoding="utf-8-sig") as handle:
+        refs = {row["report_ref"] for row in csv.DictReader(handle)}
+    return {tid for ref, tid in _processed_refs().items() if ref in refs}
+
+
 # ---------- supervisor decisions ----------
 def record_decision(ticket: dict, approver: str, decision: str, note: str = "",
                     new_team: str | None = None, now=None) -> dict:

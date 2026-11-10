@@ -347,13 +347,48 @@ def _show_sent_emails() -> None:
             st.text(message["body"])
 
 
+def _load_examples_if_empty() -> int:
+    """On a fresh copy (like the live site) there are no tickets yet: run the 10
+    example reports through the real workflow once, so every section has data."""
+    load = _optional_function("workflow.pipeline", "load_demo_tickets_if_empty")
+    if load is None:
+        return 0
+    try:
+        return load()
+    except Exception:  # never stop the tab from opening because of the examples
+        return 0
+
+
+def example_note(tickets: list[dict] | None, example_ids: set[str]) -> str | None:
+    """A plain-words note when some of the tickets shown are made-up examples."""
+    count = sum(1 for ticket in tickets or [] if ticket.get("ticket_id") in example_ids)
+    if not count:
+        return None
+    return (f"{count} of these tickets are made-up example reports, loaded so every section "
+            "has something to show. Reports you submit above are added to them.")
+
+
+def _show_example_note(tickets: list[dict] | None) -> None:
+    import streamlit as st
+
+    ids = _optional_function("workflow.pipeline", "demo_ticket_ids")
+    try:
+        note = example_note(tickets, ids() if ids else set())
+    except (OSError, ValueError, KeyError):
+        note = None
+    if note:
+        st.info(note)
+
+
 def show_workflow_tab() -> None:
     """Draw the four workflow sections; each optional dependency can be absent."""
     import streamlit as st
 
     st.header("Workflow")
+    _load_examples_if_empty()
     _show_report_form()
     tickets, error = _load_tickets()
+    _show_example_note(tickets)
     _show_team_queue(tickets, error)
     _show_approvals(tickets, error)
     _show_sent_emails()

@@ -176,3 +176,19 @@ def test_incomplete_decision_changes_nothing(flow):
     with pytest.raises(ValueError):
         pipeline.record_decision(ticket, "Sup", "reject", "", now=NOW)
     assert pipeline.load_tickets()[0]["status"] == "awaiting_approval"
+
+
+def test_a_fresh_copy_gets_the_example_tickets_once(flow, tmp_path, monkeypatch):
+    monkeypatch.setattr(pipeline, "PROCESSED_FILE", tmp_path / "processed.csv")
+    assert pipeline.load_demo_tickets_if_empty(now=NOW) == 10
+    assert pipeline.load_demo_tickets_if_empty(now=NOW) == 0  # tickets exist: nothing added
+    assert len(pipeline.load_tickets()) == 10
+    assert pipeline.demo_ticket_ids() == {f"TKT-{i:06d}" for i in range(1, 11)}
+    assert sum(t["status"] == "awaiting_approval" for t in pipeline.load_tickets()) == 4
+
+
+def test_no_examples_are_added_when_real_tickets_exist(flow, tmp_path, monkeypatch):
+    monkeypatch.setattr(pipeline, "PROCESSED_FILE", tmp_path / "processed.csv")
+    pipeline.process_report("Pothole on 4th Avenue", "Pan Africa", now=NOW)
+    assert pipeline.load_demo_tickets_if_empty(now=NOW) == 0
+    assert len(pipeline.load_tickets()) == 1 and pipeline.demo_ticket_ids() == set()
