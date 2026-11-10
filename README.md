@@ -100,7 +100,7 @@ The agreed columns, used by every module:
 - [Technical documentation](docs/technical_documentation.md) (Role 1: petroblyn)
 - [Deployment guide](docs/deployment.md) (Role 4: Dikeledi)
 - [Business case deck](docs/week8_business_case.pdf) (Role 2: Tshepo Tleane)
-- [Portfolios](docs/week8_portfolios.md) (Role 3: Thembelihle; portfolio index)
+- [Portfolios](docs/portfolio/) (Role 3: Thembelihle)
 - [Panel Q&A](docs/week8_panel_qa.md) (Role 3: Thembelihle)
 - [Presentation script](docs/week8_presentation_script.md) (Role 5: Andile Khoza)
 
