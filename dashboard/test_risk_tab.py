@@ -129,3 +129,23 @@ def test_latest_decisions_returns_newest_20_first():
     newest = latest_decisions(log, 20)
     assert len(newest) == 20
     assert newest["report_id"].iloc[0] == "R29"
+
+
+def test_decision_log_falls_back_to_the_example_on_a_fresh_copy(tmp_path):
+    from risk_tab import load_decision_log
+    example = tmp_path / "decisions_example.csv"
+    example.write_text("timestamp,component,report_id\n2026-10-27T13:40:02,classifier,ALX-1\n")
+    real = tmp_path / "decisions.csv"
+
+    log, is_example = load_decision_log(real, example)
+    assert is_example and len(log) == 1
+
+    real.write_text("timestamp,component,report_id\n2026-11-10T09:00:00,workflow,TKT-000001\n"
+                    "2026-11-10T09:00:01,workflow,TKT-000002\n")
+    log, is_example = load_decision_log(real, example)
+    assert not is_example and len(log) == 2
+
+
+def test_the_example_decision_log_is_in_git():
+    from risk_tab import DECISION_LOG_EXAMPLE, read_table
+    assert read_table(DECISION_LOG_EXAMPLE) is not None

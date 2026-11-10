@@ -23,6 +23,7 @@ FAIRNESS_CSV = GOVERNANCE / "area_fairness.csv"
 FAIRNESS_PNG = GOVERNANCE / "area_fairness.png"
 LANGUAGE_FILE = GOVERNANCE / "bias_results_after.csv"
 DECISION_LOG = GOVERNANCE / "logs" / "decisions.csv"
+DECISION_LOG_EXAMPLE = GOVERNANCE / "logs" / "decisions_example.csv"  # kept in git for fresh copies
 TRANSPARENCY_NOTES = GOVERNANCE / "transparency_notes.md"
 
 REGISTER_COLUMNS = ["risk_id", "risk", "area", "who_is_harmed", "likelihood", "impact",
@@ -270,6 +271,16 @@ def latest_decisions(df: pd.DataFrame, n: int = 20) -> pd.DataFrame:
 # ---------------------------------------------------------------------
 # The page (the only part that uses Streamlit)
 # ---------------------------------------------------------------------
+def load_decision_log(path: Path = DECISION_LOG,
+                      example: Path = DECISION_LOG_EXAMPLE) -> tuple[pd.DataFrame | None, bool]:
+    """The decision log, or the example log kept in git when the real one doesn't
+    exist yet (e.g. on the live site before anything has run). Returns (log, is_example)."""
+    log = read_table(path)
+    if log is not None:
+        return log, False
+    return read_table(example), True
+
+
 def _not_added(what: str, who: str, where: Path) -> None:
     st.info(f"{what} hasn't been added yet ({who}). It will appear here once "
             f"`{where.relative_to(ROOT).as_posix()}` exists.")
@@ -363,13 +374,17 @@ def show_risk_tab() -> None:
     # ----- 4. Decision log -----
     st.divider()
     st.markdown("### Latest decisions the system made")
-    log = read_table(DECISION_LOG)
+    log, is_example = load_decision_log()
     if log is None:
         _not_added("The decision log", "Role 4", DECISION_LOG)
     elif log.empty:
         st.info("The decision log exists but has no decisions in it yet.")
     else:
-        st.caption(f"The newest 20 of {len(log):,} decisions, with the reason for each.")
+        if is_example:
+            st.info("Nothing has run on this copy yet, so these are example decisions. "
+                    "Real ones appear here as soon as a report is processed, for example "
+                    "on the Workflow tab.")
+        st.caption(f"The newest {min(20, len(log))} of {len(log):,} decisions, with the reason for each.")
         st.dataframe(latest_decisions(log), hide_index=True, width="stretch")
 
     # ----- 5. Transparency notes -----
