@@ -135,3 +135,40 @@ The project materials do not give a pilot cost, so we should not invent one. Bef
 Our ask is to explore a controlled validation phase, not to deploy Report Radar for real decisions today. We need municipal contacts who can help review data, service operations, and privacy requirements. Together, we can agree what the pilot should test, including accuracy, urgent wait times, language coverage, and the workflow's fit with real teams. Once the requirements and costs are understood, executives can make an informed decision about whether to proceed.
 
 **Sources:** [One-page explanation](one_page_explanation.md), [Risk register](../governance/risk_register.csv)
+
+## Slide 11: Report Radar is a proposal to test how better visibility could support service planning
+
+- Report Radar
+- “Know where needs are rising.”
+- Report Radar team | Business Case Lead: Tshepo Tleane
+
+**Visual:** Brand pin and name, with the team line and a clean Alexandra map detail.
+
+**Speaker notes:**  
+Thank you for your time. Report Radar is a project built to explore how service reports might support planning and follow-up. Its current findings are based on synthetic data, and important privacy, fairness, and operational work remains. We are asking to validate the approach with municipal partners before making claims about real-world performance. We welcome your questions, especially about what a useful and responsible pilot would need to demonstrate.
+
+**Source:** [Brand guide](brand.md)
+
+## Backup slide: Report Radar prepares notifications and a downloadable risk report; a scheduled weekly report is a next step
+
+- **Resident replies:** The workflow can prepare email notifications, but its documentation says they are saved to an outbox, not sent. Actual sending needs a mail server, verified addresses, and agreed resident-contact arrangements.
+- **Manager report:** The dashboard's Risk & Compliance tab can download the risk register. A scheduled weekly summary is not documented as available.
+- **Next:** Enable and test email delivery, then build a weekly summary with agreed measures, caveats, and delivery controls.
+
+**Visual:** Two rows, “Available now” and “Build next,” with an envelope and report icon.
+
+**Speaker notes:**  
+A useful question is whether Report Radar can reply to residents automatically. Today, the workflow can prepare email notifications, but the documentation says messages are saved to an outbox and not actually sent. Sending them would require a mail server, verified municipal addresses, and an agreed approach to resident contact. Managers can download the risk register from the dashboard. A scheduled weekly report is not documented as a current feature, so that would need to be built and tested.
+
+**Sources:** [Workflow model card](../governance/model_cards/workflow.md), [Week 6 risk report](week6_risk_report.md), [Risk register](../governance/risk_register.csv)
+
+## Brand and presentation notes
+
+- Use Role 5's brand guide: DM Sans, blue `#0A21C0`, coral `#E4572E`, amber `#F2A33A`, ink `#141619`, green `#2E9E6B`, muted grey `#5A5D6E`, and light grey `#DADBE6`.
+- Label all sample results as synthetic and retain the stated forecast ranges and fairness caveats.
+- Do not claim real resident email delivery or a scheduled weekly report. Confirm the current demo workflow before presenting it.
+- No pilot cost is established in the project materials; present it as to be scoped.
+
+## Main-branch reminder
+
+Run `git pull origin main` before starting work and again before every push.
