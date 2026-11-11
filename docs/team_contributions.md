@@ -43,10 +43,10 @@ Note: the prompt log says Dikeledi implemented the missing Data, Intake and Dash
 ## Week 8 (10 Nov onwards): showcase (in progress)
 | Person | Role | What git shows | Prompt log |
 |---|---|---|---|
-| petroblyn | Role 1, Technical Documentation Lead | `docs/technical_documentation.md` and its README link | |
-| Tshepo Tleane | Role 2, Business Case Lead | Slide deck: | |
-| Thembelihle | Role 3, Portfolio and Panel Prep Lead | Portfolio template and panel Q&A. Still to come: this page, own portfolio entry, checking the team's entries | |
-| Dikeledi | Role 4, Deployment and Optimisation Lead | Example tickets and decision log load on a fresh copy, deployment guide, downloadable weekly summary | 10 Nov, 2 rows |
+| petroblyn | Role 1, Technical Documentation Lead | `docs/technical_documentation.md` and its README link | 10 Nov row (Copilot) |
+| Tshepo Tleane | Role 2, Business Case Lead | Business case outline: 11 slides and a backup slide with speaker notes and sources (`docs/week8_business_case_outline.md`) | 10 Nov row (Copilot) |
+| Thembelihle | Role 3, Portfolio and Panel Prep Lead | Portfolio template, panel Q&A (22 questions), this page and her own portfolio entry | 10 Nov row |
+| Dikeledi | Role 4, Deployment and Optimisation Lead | Example tickets and decision log load on a fresh copy, deployment guide, downloadable weekly summary. Built the slides (`docs/week8_business_case.pdf`) from Tshepo's outline, corrected the outline's backup slide, added teammates' prompt log rows, and started the portfolio entries for petroblyn, Tshepo and Andile from the git history | 10 Nov, 2 rows; 11 Nov row |
 | Andile Khoza | Role 5, Showcase Lead and Scrum Master | Brand guide, presentation script, README index of deliverables, backup checklist, delivery log, demo screenshots | 10 Nov, 2 rows (Copilot) |
 
 ## Still to fill in
