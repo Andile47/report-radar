@@ -10,7 +10,7 @@
 
 ## What I built
 **Week 5**
-- **Capacity planner** on the Forecast tab. A manager enters crews and reports per crew, and it answers: do we have enough crews? Commits: `28ac529`, `73de9e7`, merged in PR #1 (`107b8ab`).
+- **Capacity planner** on the Forecast tab. A manager enters crews and reports per crew, and it answers: do we have enough crews? Commits: `28ac529`, `73de9e7`, merged in PR #1 (`107b8b2`).
 - **Dashboard redesign**: navy and blue theme, Overview tab, KPI cards and filters. Commits: `000549d`, `fa37a2e`, merged in PR #2 (`982be3c`).
 
 **Week 6**
@@ -50,4 +50,4 @@ My first privacy check marked every email as a problem, because every email has 
 3. Worked in a team of five on GitHub, and wrote the risk register entries, panel Q&A and contributions record for a panel presentation.
 
 ## Checked by
-Teammate who checked this against the commit history: ______  Date: ______
+Teammate who checked this against the commit history: Dikeledi  Date: 11 Nov 2026 (all 18 commit links exist; one mistyped link corrected)
