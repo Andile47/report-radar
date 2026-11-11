@@ -54,9 +54,9 @@ The project brings several tasks into one view. It sorts a report by problem typ
 **Visual:** A short, prepared dashboard walkthrough at [reportradar.streamlit.app](https://reportradar.streamlit.app).
 
 **Speaker notes:**  
-I'll show the dashboard's forecast, hotspot, and risk views, using the project's synthetic data. As we look at each result, I'll point out what it can and cannot tell us. One important limit: the workflow documentation says messages are saved to an outbox and are not actually sent. We should demonstrate the report-to-ticket workflow only if that part has been checked and is working on the presentation day.
+I'll show the dashboard's forecast, hotspot, and risk views, using the project's synthetic data. As we look at each result, I'll point out what it can and cannot tell us. One important limit: the workflow documentation says messages are saved to an outbox and are not actually sent. The report-to-ticket workflow works on the live site, which loads 10 example tickets; run the 2-minute check in the deployment guide on the presentation day before showing it.
 
-**Sources:** [Workflow model card](../governance/model_cards/workflow.md), [Week 7 user guide](week7_user_guide.md)
+**Sources:** [Workflow model card](../governance/model_cards/workflow.md), [Week 7 user guide](week7_user_guide.md), [Deployment guide](deployment.md)
 
 ## Slide 5: The sample forecast is steady, while water is the service to watch
 
@@ -149,24 +149,24 @@ Thank you for your time. Report Radar is a project built to explore how service 
 
 **Source:** [Brand guide](brand.md)
 
-## Backup slide: Report Radar prepares notifications and a downloadable risk report; a scheduled weekly report is a next step
+## Backup slide: Report Radar prepares notifications and a downloadable weekly summary; sending either automatically is a next step
 
 - **Resident replies:** The workflow can prepare email notifications, but its documentation says they are saved to an outbox, not sent. Actual sending needs a mail server, verified addresses, and agreed resident-contact arrangements.
-- **Manager report:** The dashboard's Risk & Compliance tab can download the risk register. A scheduled weekly summary is not documented as available.
-- **Next:** Enable and test email delivery, then build a weekly summary with agreed measures, caveats, and delivery controls.
+- **Manager report:** The Overview tab has a weekly summary for managers, for all teams or one team, that can be previewed and downloaded. The Risk & Compliance tab can also download the risk register. Sending the summary automatically on a schedule is not built.
+- **Next:** Enable and test email delivery, then agree the measures and schedule for sending the weekly summary automatically.
 
 **Visual:** Two rows, “Available now” and “Build next,” with an envelope and report icon.
 
 **Speaker notes:**  
-A useful question is whether Report Radar can reply to residents automatically. Today, the workflow can prepare email notifications, but the documentation says messages are saved to an outbox and not actually sent. Sending them would require a mail server, verified municipal addresses, and an agreed approach to resident contact. Managers can download the risk register from the dashboard. A scheduled weekly report is not documented as a current feature, so that would need to be built and tested.
+A useful question is whether Report Radar can reply to residents automatically. Today, the workflow can prepare email notifications, but the documentation says messages are saved to an outbox and not actually sent. Sending them would require a mail server, verified municipal addresses, and an agreed approach to resident contact. Managers can preview and download a weekly summary from the Overview tab, for all teams or one team, and can download the risk register. What is not built is sending that summary automatically on a schedule.
 
-**Sources:** [Workflow model card](../governance/model_cards/workflow.md), [Week 6 risk report](week6_risk_report.md), [Risk register](../governance/risk_register.csv)
+**Sources:** [Workflow model card](../governance/model_cards/workflow.md), [README](../README.md) (weekly summary), [Deployment guide](deployment.md), [Risk register](../governance/risk_register.csv)
 
 ## Brand and presentation notes
 
 - Use Role 5's brand guide: DM Sans, blue `#0A21C0`, coral `#E4572E`, amber `#F2A33A`, ink `#141619`, green `#2E9E6B`, muted grey `#5A5D6E`, and light grey `#DADBE6`.
 - Label all sample results as synthetic and retain the stated forecast ranges and fairness caveats.
-- Do not claim real resident email delivery or a scheduled weekly report. Confirm the current demo workflow before presenting it.
+- Do not claim real resident email delivery or automatic sending of the weekly summary. The summary itself can be downloaded from the Overview tab. Confirm the current demo workflow before presenting it.
 - No pilot cost is established in the project materials; present it as to be scoped.
 
 ## Main-branch reminder
